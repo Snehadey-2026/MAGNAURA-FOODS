@@ -189,17 +189,17 @@ function About() {
   const founders = [
   {
     name: 'Monjoy Bose',
-    position: 'Co-Founder',
+    position: 'CEO & Co-Founder',
     image: '/images/monjoy.jpeg',
   },
   {
     name: 'Piu Bhattacharya Jhamnani',
-    position: 'Co-Founder',
+    position: 'COO & Co-Founder',
     image: '/images/piu.jpeg',
   },
   {
     name: 'Eshant Jhamnani',
-    position: 'Co-Founder',
+    position: 'Director & Co-Founder',
     image: '/images/eshant.jpeg',
   },
 ];
