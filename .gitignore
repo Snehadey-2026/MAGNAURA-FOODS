@@ -1,0 +1,6 @@
+node_modules/
+frontend/dist/
+backend/.env
+*.log
+render-desktop.png
+render-mobile.png
