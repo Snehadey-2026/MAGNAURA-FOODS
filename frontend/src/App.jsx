@@ -122,57 +122,144 @@ function Navbar({ brands }) {
 }
 
 function Hero({ slides }) {
+  const safeSlides = slides && slides.length ? slides : [];
   const [active, setActive] = useState(0);
+  const [prev, setPrev] = useState(null);
+  const total = safeSlides.length;
 
   useEffect(() => {
-    const timer = setInterval(() => setActive((value) => (value + 1) % slides.length), 6500);
+    if (total < 2) return undefined;
+    const timer = setInterval(() => {
+      setPrev(active);
+      setActive((value) => (value + 1) % total);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [total, active]);
 
-  const activeSlide = slides[active] || {};
-  const activeMediaType = getMediaType(activeSlide);
+  useEffect(() => {
+    if (prev === null) return undefined;
+    const t = setTimeout(() => setPrev(null), 1500);
+    return () => clearTimeout(t);
+  }, [prev]);
+
+  if (!total) return <section className="hero" id="home" />;
+
+  const activeSlide = safeSlides[active] || {};
+  const prevSlide = prev !== null ? safeSlides[prev] : null;
   const activeCtaHref = activeSlide.title === 'Taste The Legacy' ? '#franchise' : '#brands';
+  const goTo = (index) => {
+    if (index === active) return;
+    setPrev(active);
+    setActive(index);
+  };
+
+  const renderLayer = (slide, key, isActive) => {
+    if (!slide) return null;
+    const type = getMediaType(slide);
+    return (
+      <div
+        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'}`}
+        key={key}
+        aria-hidden="true"
+      >
+        {type === 'video' ? (
+          <video
+            src={slide.mediaUrl}
+            poster={slide.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            ref={(el) => {
+              if (!el) return;
+              const attempt = () => {
+                const p = el.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+              };
+              attempt();
+              el.addEventListener('canplay', attempt, { once: true });
+            }}
+          />
+        ) : (
+          <img src={slide.mediaUrl} alt="" loading={isActive ? 'eager' : 'lazy'} />
+        )}
+      </div>
+    );
+  };
+
+  const counter = String(active + 1).padStart(2, '0');
+  const totalStr = String(total).padStart(2, '0');
 
   return (
     <section className="hero" id="home">
-      <AnimatePresence mode="wait">
-        <motion.div
-          className="hero-media"
-          key={active}
-          initial={{ opacity: 1, scale: 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2 }}
-        >
-          {activeMediaType === 'video' ? (
-            <video src={activeSlide.mediaUrl} autoPlay muted loop playsInline />
-          ) : (
-            <img src={activeSlide.mediaUrl} alt="" />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      <div className="hero-stage">
+        {renderLayer(prevSlide, `prev-${prev}`, false)}
+        {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true)}
+      </div>
       <div className="hero-overlay" />
+      <div className="hero-vignette" aria-hidden="true" />
+      <div className="hero-grain" aria-hidden="true" />
+
       <motion.div
         className="hero-content"
-        initial={{ opacity: 0.94, y: 14 }}
+        key={`content-${active}`}
+        initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
       >
-        <span className="eyebrow">Luxury Corporate Hospitality Group</span>
-        <h1>{slides[active].title}</h1>
-        <p>{slides[active].subtitle}</p>
-        <a className="gold-button" href={activeCtaHref}>
-          {slides[active].cta} <ArrowRight size={18} />
-        </a>
+        <span className="eyebrow">{activeSlide.eyebrow || 'Luxury Corporate Hospitality Group'}</span>
+        <motion.h1
+          key={`title-${active}`}
+          initial={{ opacity: 0, y: 26, letterSpacing: '0.02em' }}
+          animate={{ opacity: 1, y: 0, letterSpacing: '0em' }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+        >
+          {activeSlide.title}
+        </motion.h1>
+        <motion.p
+          key={`sub-${active}`}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
+        >
+          {activeSlide.subtitle}
+        </motion.p>
+        <motion.a
+          className="gold-button hero-cta"
+          href={activeCtaHref}
+          key={`cta-${active}`}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
+        >
+          {activeSlide.cta} <ArrowRight size={18} />
+        </motion.a>
       </motion.div>
-      <div className="hero-dots">
-        {slides.map((slide, index) => (
+
+      <div className="hero-meta" aria-hidden="true">
+        <span className="hero-meta-counter">
+          <strong>{counter}</strong>
+          <span className="hero-meta-divider" />
+          <em>{totalStr}</em>
+        </span>
+        <span className="hero-meta-brand">MAGNAURA · FOODS</span>
+      </div>
+
+      <div className="hero-nav">
+        {safeSlides.map((slide, index) => (
           <button
             key={slide.title}
-            className={index === active ? 'active' : ''}
-            onClick={() => setActive(index)}
-            aria-label={`Show slide ${index + 1}`}
-          />
+            className={`hero-nav-item ${index === active ? 'active' : ''}`}
+            onClick={() => goTo(index)}
+            aria-label={`Show slide ${index + 1}: ${slide.title}`}
+          >
+            <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
+            <span className="hero-nav-track">
+              <span className="hero-nav-fill" key={`${index}-${active}`} />
+            </span>
+            <span className="hero-nav-label">{slide.title}</span>
+          </button>
         ))}
       </div>
     </section>

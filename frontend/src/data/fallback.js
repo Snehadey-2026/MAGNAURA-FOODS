@@ -3,33 +3,38 @@ export const heroSlides = [
     title: 'Taste The Legacy',
     subtitle: 'Tradition, innovation, and unforgettable hospitality.',
     cta: 'Partner With Us',
-    mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1800&q=85',
+    mediaType: 'video',
+    mediaUrl: '/assets/hero/mag-hero.mp4',
+    poster: '/assets/hero/food-experience.png',
+    eyebrow: 'The MAGNAURA Signature',
+    focal: 'center',
   },
   {
     title: 'A World of Flavors. One Vision.',
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/best-sellers.png',
+    eyebrow: 'Signature Menu · Best Sellers',
+    focal: 'center',
   },
   {
     title: 'Building the Future of Hospitality',
     subtitle: 'Exceptional brands crafted for modern consumers.',
     cta: 'Explore Our Brands',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/signature-pizza.png',
+    eyebrow: 'Wood-Fired Craft · Modern Kitchen',
+    focal: 'center',
   },
   {
     title: 'Designed for Modern Hospitality',
     subtitle: 'Elegant service, inspired interiors, and memorable guest journeys.',
     cta: 'See Our Vision',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/food-experience.png',
+    eyebrow: 'From Our Kitchen · The Food Experience',
+    focal: 'center',
   },
   {
     title: 'Experiences that Last',
@@ -37,7 +42,9 @@ export const heroSlides = [
     cta: 'Discover More',
     mediaType: 'image',
     mediaUrl:
-      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=85',
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2200&q=90',
+    eyebrow: 'The Magnaura Ambience',
+    focal: 'center',
   },
 ];
 
