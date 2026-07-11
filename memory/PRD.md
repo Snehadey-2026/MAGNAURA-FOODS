@@ -5,35 +5,37 @@ Premium hospitality corporate site for MAGNAURA FOODS (parent brand of Mag'Momo,
 
 Stack: Vite + React 18 + Framer Motion + Node/Express + MongoDB.
 
-## Session (2026-01) — Hero Slider Premium Upgrade
-Scope: Upgrade **only** the Hero Slider. Everything else preserved verbatim.
+## Session (2026-01) — Hero Slider + Menu + Preview
+Scope: Upgrade only the Hero Slider, remove Menu search, ensure preview URL works. Everything else preserved verbatim.
 
 ### Delivered
-- Cinematic 5-slide hero with Ken Burns zoom (8s), 1.4s cross-fade, 6s auto-advance, staggered text reveals, gold progress bar, elegant slide counter (01/05), grain + vignette overlay, MAGNAURA · FOODS meta tag.
-- **Slide 1** — video only: uploaded `MAGHEROVIDEO1.mp4` with hardened autoplay (muted + defaultMuted + playsInline + `.play()` retry on `loadeddata`/`canplay` + fallback to first user interaction). Poster: dal-makhani ambience shot (differs from slide 2 to avoid duplicate first paint).
-- **Slides 2–5** — freshly AI-generated Michelin-quality food photography (Gemini Nano Banana `gemini-3.1-flash-image-preview`), each dish faithfully matching the MAGNAURA menu PDF:
-  - Slide 2 · PANEER BUTTER MASALA in hammered copper karahi with tandoori naan.
-  - Slide 3 · HYDERABADI VEG BIRYANI in copper handi with boondi raita and steam.
-  - Slide 4 · ASSORTED TANDOORI PLATTER (Paneer Malai Tikka + Achari Tikka + Hara Bhara + Galouti + Broccoli Tikka) with mint chutney.
-  - Slide 5 · DAL MAKHANI lifestyle shot in a warm luxury restaurant setting (jharokha lattice, velvet chairs, candlelight).
-- All original hero copy preserved exactly (`Taste The Legacy`, `A World of Flavors. One Vision.`, `Building the Future of Hospitality`, `Designed for Modern Hospitality`, `Experiences that Last`).
-- Existing navbar "M" monogram **untouched**; extracted into production assets `/public/assets/logo/` (svg/png in gold/white/dark, favicon.ico 16·32·48, apple-touch-icon 180×180). Favicon linked in `index.html`.
-- Fully responsive: navigator collapses to compact bars on mobile.
+- **Preview URL now works** — added `start` script (`vite --host 0.0.0.0 --port 3000`) so supervisor's `yarn start` boots the frontend, and Vite is configured with `host: 0.0.0.0`, `port: 3000`, `strictPort`, `allowedHosts: true`.
+- **Menu section**: search input + `Search` icon import + `search` state + search-based filter all removed. Only Brand + Category chips remain.
+- **Hero Slider** — 5-slide cinematic experience with Ken Burns zoom (8s), 1.4s cross-fade, 6s auto-advance, staggered text reveals, gold progress bar, `01 / 05` counter, grain + vignette:
+  - Slide 1 · VIDEO ONLY — uploaded `MAGHEROVIDEO1.mp4` with hardened autoplay (muted + playsInline + `.play()` retries on `loadeddata`/`canplay` + first-interaction fallback).
+  - Slide 2 · NORTH INDIAN — Bamboo Veg Biryani (spilled from hollowed bamboo) + Paneer Butter Masala + Dal Makhani + Malai Kofta + Butter Naan + Jeera Rice.
+  - Slide 3 · SOUTH INDIAN — Masala Dosa + Idli stack + Medu Vada + Sambar + trio of chutneys (coconut / tomato / podi).
+  - Slide 4 · INDO-CHINESE — Hakka Noodles + Schezwan Fried Rice + Steamed Momos in bamboo basket + Honey Chilli Potato + Paneer Manchurian.
+  - Slide 5 · DESSERTS & ICE CREAM — Gulab Jamun with Ice Cream + Gajar Ka Halwa + Moong Dal Halwa + Rabdi Jalebi + Triple Sundae.
+- All 4 slide backgrounds freshly AI-generated via Gemini Nano Banana (`gemini-3.1-flash-image-preview`) — Michelin-star editorial food photography, warm cinematic lighting, dishes clustered left-of-center so hero text stays clean on the right.
+- Original hero copy preserved exactly (`Taste The Legacy` etc.).
+- Existing navbar "M" monogram untouched; production logo assets in `/public/assets/logo/` (SVG + PNG gold/white/dark, favicon.ico 16·32·48, apple-touch-icon 180×180). Favicon linked in `index.html`.
 
 ### Files touched
-- `frontend/src/App.jsx` — Hero component only (cinematic transitions, layered stage, hardened autoplay).
-- `frontend/src/data/fallback.js` — heroSlides updated with new media + eyebrow copy.
-- `frontend/src/styles.css` — `.hero-stage/.hero-layer/.hero-vignette/.hero-grain/.hero-meta/.hero-nav*` styles + Ken Burns + progress-bar keyframes; mobile rules.
-- `frontend/index.html` — favicon / apple-touch-icon links.
-- `backend/.env` — added `EMERGENT_LLM_KEY` (used only for one-off image generation).
-- New assets: `frontend/public/assets/hero/mag-hero.mp4`, `slide2-paneer-butter-masala.png`, `slide3-hyderabadi-biryani.png`, `slide4-tandoori-platter.png`, `slide5-dal-makhani.png`, plus `frontend/public/assets/logo/*` and root `favicon.ico` / `apple-touch-icon.png`.
+- `frontend/vite.config.js` — bind 0.0.0.0:3000, allowedHosts.
+- `frontend/package.json` — added `start` and preview scripts.
+- `frontend/src/App.jsx` — Hero component only + removed Menu search field / import / state / filter.
+- `frontend/src/data/fallback.js` — heroSlides updated to 5-category spread.
+- `frontend/src/styles.css` — cinematic hero styles + Ken Burns + progress-bar keyframes + mobile rules.
+- `frontend/index.html` — favicon links.
+- `backend/.env` — added `EMERGENT_LLM_KEY` for image generation.
+- New assets: `frontend/public/assets/hero/mag-hero.mp4`, `slide2-north-indian.png`, `slide3-south-indian.png`, `slide4-chinese.png`, `slide5-desserts.png`, plus `/public/assets/logo/*` and root `favicon.ico` / `apple-touch-icon.png`.
 
 ### Preserved (untouched)
-Navbar, About Us, Brands, Menu Showcase, Franchise, Contact, Footer, typography, buttons, existing content, routes, and API.
+Navbar (same "M" monogram), About Us, Brands, Menu Showcase (grid + brand/category chips), Franchise, Contact, Footer, typography, buttons, routing, API.
 
 ## Backlog / Next
-- (P1) Extract a specific still-frame from mag-hero.mp4 as the video's poster for identical first-paint continuity.
-- (P2) Encode a WebM alternate source for the hero video to lower Chrome payload.
-- (P2) Preload only slide 2 image + lazy-load 3-5 for even faster LCP.
-- (P3) Optional un-mute toggle on slide 1 to let guests enjoy the kitchen ambience audio.
+- (P1) Extract a specific still-frame from mag-hero.mp4 as the video poster (identical first-paint continuity).
+- (P2) WebM alternate source for the hero video (smaller Chrome payload).
+- (P3) Optional un-mute toggle on Slide 1 for ambient kitchen audio.
 

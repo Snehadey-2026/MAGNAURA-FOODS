@@ -10,7 +10,6 @@ import {
   MapPin,
   Menu,
   Phone,
-  Search,
   ShieldCheck,
   Sparkles,
   Store,
@@ -168,7 +167,6 @@ function Hero({ slides }) {
             poster={slide.poster}
             autoPlay
             muted
-            defaultMuted
             loop
             playsInline
             preload="auto"
@@ -398,7 +396,6 @@ function Brands({ brands }) {
 function MenuShowcase({ brands, items }) {
   const [brand, setBrand] = useState('All Brands');
   const [category, setCategory] = useState('All');
-  const [search, setSearch] = useState('');
   const showcaseFillers = [
     {
       name: 'Smoked Butter Chicken Platter',
@@ -428,8 +425,7 @@ function MenuShowcase({ brands, items }) {
   const visible = items.filter((item) => {
     const matchBrand = brand === 'All Brands' || item.brand === brand;
     const matchCategory = category === 'All' || item.category === category;
-    const matchSearch = `${item.name} ${item.description}`.toLowerCase().includes(search.toLowerCase());
-    return matchBrand && matchCategory && matchSearch;
+    return matchBrand && matchCategory;
   });
   const visibleMenu = (visible.length ? visible : showcaseItems)
     .concat(showcaseItems.filter((item) => !visible.some((visibleItem) => visibleItem.name === item.name)))
@@ -463,10 +459,6 @@ function MenuShowcase({ brands, items }) {
             </button>
           ))}
         </div>
-        <label className="search-field">
-          <Search size={18} />
-          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search menu" />
-        </label>
       </div>
       <div className="menu-grid">
         {visibleMenu.map((item) => (
