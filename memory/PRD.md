@@ -9,26 +9,31 @@ Stack: Vite + React 18 + Framer Motion + Node/Express + MongoDB.
 Scope: Upgrade **only** the Hero Slider. Everything else preserved verbatim.
 
 ### Delivered
-- Cinematic 5-slide hero with Ken Burns zoom, 1.4s cross-fade, 6s auto-advance, staggered text reveals, gold progress bar, elegant slide counter (01/05), grain + vignette overlay.
-- Slide 1: uploaded MAGHEROVIDEO1.mp4 as the cinematic hero video (with graceful poster fallback).
-- Slides 2–5: use user-uploaded food-collage images (best-sellers, signature pizza wood-board, south-indian variety) + warm restaurant ambience — all matching the MAGNAURA MENU PDF (Bamboo Biryani, Hyderabadi Veg Biryani, Paneer Butter Masala, Dal Makhani, Masala Dosa, Pani Puri, Kebab Platter, etc.).
-- All existing hero titles, subtitles, CTA text preserved exactly (`Taste The Legacy` remains on Slide 1).
-- Extracted the existing navbar "M" monogram into reusable production assets in `/public/assets/logo/`: svg (gold, white, dark), matching 1024×1024 PNGs, `favicon.ico` (16/32/48), `apple-touch-icon.png` (180×180). Navbar logo itself is UNCHANGED (still the same CSS "M" monogram).
-- Favicon + apple-touch-icon linked in `index.html`.
-- Fully responsive: 5-column slide navigator collapses to compact bars on mobile.
+- Cinematic 5-slide hero with Ken Burns zoom (8s), 1.4s cross-fade, 6s auto-advance, staggered text reveals, gold progress bar, elegant slide counter (01/05), grain + vignette overlay, MAGNAURA · FOODS meta tag.
+- **Slide 1** — video only: uploaded `MAGHEROVIDEO1.mp4` with hardened autoplay (muted + defaultMuted + playsInline + `.play()` retry on `loadeddata`/`canplay` + fallback to first user interaction). Poster: dal-makhani ambience shot (differs from slide 2 to avoid duplicate first paint).
+- **Slides 2–5** — freshly AI-generated Michelin-quality food photography (Gemini Nano Banana `gemini-3.1-flash-image-preview`), each dish faithfully matching the MAGNAURA menu PDF:
+  - Slide 2 · PANEER BUTTER MASALA in hammered copper karahi with tandoori naan.
+  - Slide 3 · HYDERABADI VEG BIRYANI in copper handi with boondi raita and steam.
+  - Slide 4 · ASSORTED TANDOORI PLATTER (Paneer Malai Tikka + Achari Tikka + Hara Bhara + Galouti + Broccoli Tikka) with mint chutney.
+  - Slide 5 · DAL MAKHANI lifestyle shot in a warm luxury restaurant setting (jharokha lattice, velvet chairs, candlelight).
+- All original hero copy preserved exactly (`Taste The Legacy`, `A World of Flavors. One Vision.`, `Building the Future of Hospitality`, `Designed for Modern Hospitality`, `Experiences that Last`).
+- Existing navbar "M" monogram **untouched**; extracted into production assets `/public/assets/logo/` (svg/png in gold/white/dark, favicon.ico 16·32·48, apple-touch-icon 180×180). Favicon linked in `index.html`.
+- Fully responsive: navigator collapses to compact bars on mobile.
 
 ### Files touched
-- `frontend/src/App.jsx` — Hero component only (cinematic transitions, refs to auto-play video, slide meta + nav).
+- `frontend/src/App.jsx` — Hero component only (cinematic transitions, layered stage, hardened autoplay).
 - `frontend/src/data/fallback.js` — heroSlides updated with new media + eyebrow copy.
-- `frontend/src/styles.css` — new `.hero-stage/.hero-layer/.hero-vignette/.hero-grain/.hero-meta/.hero-nav*` styles + Ken Burns + progress-bar keyframes; mobile rules added.
-- `frontend/index.html` — favicon/apple-touch-icon links.
-- New assets: `frontend/public/assets/hero/*` (video + 3 food PNGs) and `frontend/public/assets/logo/*` (SVGs + PNGs + favicon + apple-touch-icon).
+- `frontend/src/styles.css` — `.hero-stage/.hero-layer/.hero-vignette/.hero-grain/.hero-meta/.hero-nav*` styles + Ken Burns + progress-bar keyframes; mobile rules.
+- `frontend/index.html` — favicon / apple-touch-icon links.
+- `backend/.env` — added `EMERGENT_LLM_KEY` (used only for one-off image generation).
+- New assets: `frontend/public/assets/hero/mag-hero.mp4`, `slide2-paneer-butter-masala.png`, `slide3-hyderabadi-biryani.png`, `slide4-tandoori-platter.png`, `slide5-dal-makhani.png`, plus `frontend/public/assets/logo/*` and root `favicon.ico` / `apple-touch-icon.png`.
 
 ### Preserved (untouched)
 Navbar, About Us, Brands, Menu Showcase, Franchise, Contact, Footer, typography, buttons, existing content, routes, and API.
 
 ## Backlog / Next
-- (P1) Frame-accurate video poster (extract still from mag-hero.mp4) for a seamless first paint.
-- (P2) Add `<source>` WebM alongside MP4 for smaller Chrome payload.
-- (P2) Preload only the first hero image + lazy-load the rest for even faster LCP.
+- (P1) Extract a specific still-frame from mag-hero.mp4 as the video's poster for identical first-paint continuity.
+- (P2) Encode a WebM alternate source for the hero video to lower Chrome payload.
+- (P2) Preload only slide 2 image + lazy-load 3-5 for even faster LCP.
+- (P3) Optional un-mute toggle on slide 1 to let guests enjoy the kitchen ambience audio.
 

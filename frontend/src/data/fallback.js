@@ -5,7 +5,7 @@ export const heroSlides = [
     cta: 'Partner With Us',
     mediaType: 'video',
     mediaUrl: '/assets/hero/mag-hero.mp4',
-    poster: '/assets/hero/food-experience.png',
+    poster: '/assets/hero/slide5-dal-makhani.png',
     eyebrow: 'The MAGNAURA Signature',
     focal: 'center',
   },
@@ -14,8 +14,8 @@ export const heroSlides = [
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
-    mediaUrl: '/assets/hero/best-sellers.png',
-    eyebrow: 'Signature Menu · Best Sellers',
+    mediaUrl: '/assets/hero/slide2-paneer-butter-masala.png',
+    eyebrow: 'Paneer Butter Masala · Signature Series',
     focal: 'center',
   },
   {
@@ -23,8 +23,8 @@ export const heroSlides = [
     subtitle: 'Exceptional brands crafted for modern consumers.',
     cta: 'Explore Our Brands',
     mediaType: 'image',
-    mediaUrl: '/assets/hero/signature-pizza.png',
-    eyebrow: 'Wood-Fired Craft · Modern Kitchen',
+    mediaUrl: '/assets/hero/slide3-hyderabadi-biryani.png',
+    eyebrow: 'Hyderabadi Veg Biryani · Slow-Cooked Craft',
     focal: 'center',
   },
   {
@@ -32,8 +32,8 @@ export const heroSlides = [
     subtitle: 'Elegant service, inspired interiors, and memorable guest journeys.',
     cta: 'See Our Vision',
     mediaType: 'image',
-    mediaUrl: '/assets/hero/food-experience.png',
-    eyebrow: 'From Our Kitchen · The Food Experience',
+    mediaUrl: '/assets/hero/slide4-tandoori-platter.png',
+    eyebrow: 'The Tandoor · Kebabs & Tikkas',
     focal: 'center',
   },
   {
@@ -41,9 +41,8 @@ export const heroSlides = [
     subtitle: 'A seamless blend of storytelling, taste, and atmosphere.',
     cta: 'Discover More',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2200&q=90',
-    eyebrow: 'The Magnaura Ambience',
+    mediaUrl: '/assets/hero/slide5-dal-makhani.png',
+    eyebrow: 'Dal Makhani · The Magnaura Ambience',
     focal: 'center',
   },
 ];

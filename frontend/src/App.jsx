@@ -168,16 +168,33 @@ function Hero({ slides }) {
             poster={slide.poster}
             autoPlay
             muted
+            defaultMuted
             loop
             playsInline
             preload="auto"
+            disablePictureInPicture
             ref={(el) => {
               if (!el) return;
+              el.muted = true;
               const attempt = () => {
                 const p = el.play();
-                if (p && typeof p.catch === 'function') p.catch(() => {});
+                if (p && typeof p.catch === 'function') {
+                  p.catch(() => {
+                    // Silent retry on next user interaction
+                    const retry = () => {
+                      el.play().catch(() => {});
+                      document.removeEventListener('click', retry);
+                      document.removeEventListener('touchstart', retry);
+                      document.removeEventListener('scroll', retry);
+                    };
+                    document.addEventListener('click', retry, { once: true });
+                    document.addEventListener('touchstart', retry, { once: true });
+                    document.addEventListener('scroll', retry, { once: true });
+                  });
+                }
               };
               attempt();
+              el.addEventListener('loadeddata', attempt, { once: true });
               el.addEventListener('canplay', attempt, { once: true });
             }}
           />
