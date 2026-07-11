@@ -4,3 +4,10 @@ backend/.env
 *.log
 render-desktop.png
 render-mobile.png
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
