@@ -3,41 +3,47 @@ export const heroSlides = [
     title: 'Taste The Legacy',
     subtitle: 'Tradition, innovation, and unforgettable hospitality.',
     cta: 'Partner With Us',
-    mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1800&q=85',
+    mediaType: 'video',
+    mediaUrl: '/assets/hero/mag-hero.mp4',
+    poster: '/assets/hero/slide2-north-indian.png',
+    eyebrow: 'The MAGNAURA Signature',
+    focal: 'center',
   },
   {
     title: 'A World of Flavors. One Vision.',
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/slide2-north-indian.png',
+    eyebrow: 'North Indian · Bamboo Biryani & Signature Curries',
+    focal: 'center',
   },
   {
     title: 'Building the Future of Hospitality',
     subtitle: 'Exceptional brands crafted for modern consumers.',
     cta: 'Explore Our Brands',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/slide3-south-indian.png',
+    eyebrow: 'South Indian · Dosa · Idli · Vada Craft',
+    focal: 'center',
   },
   {
     title: 'Designed for Modern Hospitality',
     subtitle: 'Elegant service, inspired interiors, and memorable guest journeys.',
     cta: 'See Our Vision',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/slide4-chinese.png',
+    eyebrow: 'Indo-Chinese · Wok-Fired · Momos & Noodles',
+    focal: 'center',
   },
   {
     title: 'Experiences that Last',
     subtitle: 'A seamless blend of storytelling, taste, and atmosphere.',
     cta: 'Discover More',
     mediaType: 'image',
-    mediaUrl:
-      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=85',
+    mediaUrl: '/assets/hero/slide5-desserts.png',
+    eyebrow: 'Sweet Endings · Halwa · Jalebi · Ice Cream',
+    focal: 'center',
   },
 ];
 
