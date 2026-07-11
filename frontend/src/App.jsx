@@ -227,14 +227,17 @@ function About() {
       </div>
       <div className="about-story">
         <p>
-          Magnaura Foods was built with a simple ambition: create hospitality brands that feel refined, reliable,
-          and memorable every single day. The business brings together culinary thinking, disciplined operations,
-          franchise readiness, and a deep respect for Indian dining culture. From momos and rolls to family dining
-          and chai-led concepts, every brand is designed with its own identity while following one uncompromising
-          standard of guest experience. The team focuses on food quality, premium presentation, staff training,
-          supply consistency, and scalable systems so each outlet can grow with confidence. Magnaura is not chasing
-          short-term noise; it is building a long-life hospitality platform where taste, service, ambience, and
-          business discipline move together.
+          Magnaura Foods was built on the vision of bringing the world’s most loved flavours together under one trusted brand, we offer an exciting multi-cuisine dining experience that celebrates authenticity, quality, and innovation.
+
+From the rich heritage of Indian cuisine to the elegance of Italian, the vibrant flavours of Mexican, the comfort of South Indian delicacies, and the finesse of Japanese cuisine, Magnaura Foods creates a destination where every guest can discover something they love. Our carefully curated menu, standardized recipes, and uncompromising quality ensure a consistently exceptional experience across every location.
+
+More than a restaurant brand, Magnaura Foods is a complete food and hospitality ecosystem. Through our scalable franchise models, operational excellence, technology-driven systems, and end-to-end business support, we empower entrepreneurs to build successful and sustainable food businesses with confidence.
+
+At Magnaura Foods, we believe that great food has the power to bring people together. Every meal we serve reflects our commitment to freshness, hygiene, authenticity, and outstanding customer service. Whether it’s a quick takeaway, a family dinner, a premium dining experience, or a large hospitality destination, our goal is to deliver memorable experiences that keep guests coming back.
+
+Driven by innovation, guided by integrity, and inspired by culinary excellence, Magnaura Foods is on a mission to become the world’s most trusted Food Village—a place where diverse cuisines, warm hospitality, and successful partnerships come together under one roof.
+
+Welcome to Magnaura Foods—where the world gathers around great food.
         </p>
         <div className="value-list">
           {['Vision-led brand building', 'Guest-first dining culture', 'Premium operating systems', 'Future-ready expansion'].map((item) => (
