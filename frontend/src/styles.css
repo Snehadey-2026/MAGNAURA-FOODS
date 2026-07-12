@@ -270,6 +270,17 @@ video {
   display: block;
 }
 
+/* Push the food composition to the RIGHT side of the viewport on desktop so
+   the LEFT half stays clear for the hero text — no more overlap. Slide 1 is a
+   full-screen video and stays centered. */
+@media (min-width: 981px) {
+  .hero-layer-image img {
+    transform: scale(1.28);
+    transform-origin: 92% 50%;
+    transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
 /* Cinematic grade for the chef flambé video (Slide 1) */
 .hero-layer-video video {
   filter:
@@ -291,18 +302,19 @@ video {
   mix-blend-mode: screen;
 }
 
-/* Left-side dark gradient overlay — ensures text readability */
+/* Left-side dark gradient overlay — ensures text readability & separates
+   the LEFT text column from the RIGHT food composition. */
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
   background:
     linear-gradient(90deg,
-      rgba(3, 22, 20, 0.95) 0%,
-      rgba(3, 22, 20, 0.82) 24%,
-      rgba(3, 22, 20, 0.48) 46%,
-      rgba(3, 22, 20, 0.12) 70%,
-      rgba(3, 22, 20, 0) 100%),
+      rgba(3, 22, 20, 0.99) 0%,
+      rgba(3, 22, 20, 0.97) 32%,
+      rgba(3, 22, 20, 0.78) 46%,
+      rgba(3, 22, 20, 0.32) 62%,
+      rgba(3, 22, 20, 0) 82%),
     linear-gradient(0deg, rgba(4, 10, 9, 0.85), rgba(4, 10, 9, 0.05) 50%, rgba(4, 10, 9, 0.30) 100%);
   pointer-events: none;
 }
@@ -2382,4 +2394,111 @@ p {
   .photo-tile,
   .photo-tile-wide,
   .photo-tile-tall { grid-column: 1; grid-row: span 1; }
+}
+
+/* ============================================================
+   PHASE 3+: ENHANCED GALLERY EVENTS SECTION
+   Stats strip + marquee ticker of event types
+   ============================================================ */
+.gallery-events-section .gallery-section-heading {
+  align-items: center;
+}
+
+.gallery-events-stats {
+  display: flex;
+  gap: 40px;
+  padding: 18px 26px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(232, 200, 122, 0.08), rgba(4, 22, 20, 0.55));
+  border: 1px solid rgba(232, 200, 122, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.gallery-events-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 108px;
+}
+
+.gallery-events-stats strong {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 2.4vw, 2.4rem);
+  color: var(--ivory);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.gallery-events-stats span {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--champagne);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.gallery-events-marquee {
+  margin-top: 48px;
+  padding: 22px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(232, 200, 122, 0.18);
+  border-bottom: 1px solid rgba(232, 200, 122, 0.18);
+  background: linear-gradient(90deg, rgba(232, 200, 122, 0.04), rgba(4, 22, 20, 0.55), rgba(232, 200, 122, 0.04));
+  mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+
+.gallery-events-marquee-track {
+  display: inline-flex;
+  gap: 26px;
+  align-items: center;
+  white-space: nowrap;
+  animation: gallery-events-scroll 32s linear infinite;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  color: rgba(248, 247, 242, 0.88);
+  letter-spacing: 0.06em;
+}
+
+.gallery-events-marquee-track span:nth-child(even) {
+  color: var(--champagne);
+  font-size: 0.9em;
+}
+
+@keyframes gallery-events-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Playing-state badge on hover of an event card */
+.event-video-card:hover::before {
+  content: 'LIVE';
+  position: absolute;
+  z-index: 3;
+  top: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.9);
+  color: #0b1210;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+@media (max-width: 980px) {
+  .gallery-events-section .gallery-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .gallery-events-stats {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+  }
+  .gallery-events-stats div { min-width: 0; }
+  .gallery-events-marquee-track { font-size: 1rem; }
 }

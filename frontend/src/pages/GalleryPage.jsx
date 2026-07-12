@@ -135,14 +135,22 @@ function GalleryReserveButton() {
 
 const eventVideos = [
   {
-    title: 'Live Fire Juggling Performance',
+    title: 'MAGNAURA Grand Opening Night',
     label: 'Signature Event',
+    src: '/assets/gallery/gallery-hero.mp4',
+    poster: '/assets/gallery/gallery-hero-poster.jpg',
+  },
+  {
+    title: 'Live Fire Juggling Performance',
+    label: 'Kitchen Theatre',
     src: '/assets/gallery/fire-juggler.mp4',
+    poster: '/assets/gallery/fire-juggler-poster.jpg',
   },
   {
     title: 'Chef\u2019s Flambé at the Pass',
-    label: 'Kitchen Theatre',
+    label: 'Chef Theatre',
     src: '/assets/hero/mag-hero.mp4',
+    poster: '/assets/hero/mag-hero-poster.jpg',
   },
 ];
 
@@ -186,13 +194,24 @@ function EventVideoCard({ video, index }) {
       data-testid={`event-video-${video.title}`}
     >
       <video
-        src={video.src}
         autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
-      />
+        preload="auto"
+        poster={video.poster}
+        ref={(el) => {
+          if (!el) return;
+          el.muted = true;
+          el.load();
+          const p = () => el.play().catch(() => {});
+          p();
+          el.addEventListener('loadeddata', p, { once: true });
+          el.addEventListener('canplay', p, { once: true });
+        }}
+      >
+        <source src={video.src} type="video/mp4" />
+      </video>
       <div className="event-video-caption">
         <span>{video.label}</span>
         <h4>{video.title}</h4>
@@ -233,19 +252,19 @@ export default function GalleryPage() {
             loop
             playsInline
             preload="auto"
-            poster="/assets/gallery/fire-juggler-poster.jpg"
+            poster="/assets/gallery/gallery-hero-poster.jpg"
             ref={(el) => {
               if (!el) return;
               el.muted = true;
-              el.playbackRate = 0.85;
+              el.playbackRate = 0.9;
               el.load();
-              const tryPlay = () => el.play().catch(() => {});
-              tryPlay();
-              el.addEventListener('loadeddata', tryPlay, { once: true });
-              el.addEventListener('canplay', tryPlay, { once: true });
+              const p = () => el.play().catch(() => {});
+              p();
+              el.addEventListener('loadeddata', p, { once: true });
+              el.addEventListener('canplay', p, { once: true });
             }}
           >
-            <source src="/assets/gallery/fire-juggler.mp4" type="video/mp4" />
+            <source src="/assets/gallery/gallery-hero.mp4" type="video/mp4" />
           </video>
           <div className="gallery-hero-content">
             <motion.span
@@ -274,21 +293,68 @@ export default function GalleryPage() {
           </div>
         </section>
 
-        <section className="gallery-section" data-testid="gallery-section-events" id="event-videos">
+        <section className="gallery-section gallery-events-section" data-testid="gallery-section-events" id="event-videos">
           <div className="gallery-section-heading">
             <div>
               <span className="eyebrow">Restaurant Event Videos</span>
               <h2>Live theatre, every evening.</h2>
               <p style={{ maxWidth: '620px', marginTop: '10px' }}>
-                Signature performances captured on the floor — the fire juggler, the chef&apos;s flambé,
-                and the moments guests remember.
+                Signature performances captured on the floor — grand openings, live fire artistry,
+                and the chef&apos;s flambé at the pass. The moments our guests remember.
               </p>
+            </div>
+            <div className="gallery-events-stats" aria-hidden="true">
+              <div>
+                <strong>150+</strong>
+                <span>Curated Events</span>
+              </div>
+              <div>
+                <strong>24</strong>
+                <span>Signature Performances</span>
+              </div>
+              <div>
+                <strong>4.9</strong>
+                <span>Guest Rating</span>
+              </div>
             </div>
           </div>
           <div className="event-video-grid">
             {eventVideos.map((video, i) => (
               <EventVideoCard key={video.title} video={video} index={i} />
             ))}
+          </div>
+          <div className="gallery-events-marquee" aria-hidden="true">
+            <div className="gallery-events-marquee-track">
+              <span>Grand Openings</span>
+              <span aria-hidden="true">•</span>
+              <span>Anniversaries</span>
+              <span aria-hidden="true">•</span>
+              <span>Chef&apos;s Table</span>
+              <span aria-hidden="true">•</span>
+              <span>Fire Shows</span>
+              <span aria-hidden="true">•</span>
+              <span>Live Mixology</span>
+              <span aria-hidden="true">•</span>
+              <span>Corporate Soirees</span>
+              <span aria-hidden="true">•</span>
+              <span>Family Celebrations</span>
+              <span aria-hidden="true">•</span>
+              {/* duplicate for seamless loop */}
+              <span>Grand Openings</span>
+              <span aria-hidden="true">•</span>
+              <span>Anniversaries</span>
+              <span aria-hidden="true">•</span>
+              <span>Chef&apos;s Table</span>
+              <span aria-hidden="true">•</span>
+              <span>Fire Shows</span>
+              <span aria-hidden="true">•</span>
+              <span>Live Mixology</span>
+              <span aria-hidden="true">•</span>
+              <span>Corporate Soirees</span>
+              <span aria-hidden="true">•</span>
+              <span>Family Celebrations</span>
+              <span aria-hidden="true">•</span>
+            </div>
           </div>
         </section>
 
