@@ -14,6 +14,7 @@ import {
   Sparkles,
   Store,
   Users,
+  Utensils,
   X,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -120,6 +121,27 @@ function Navbar({ brands }) {
   );
 }
 
+function ReserveTableButton() {
+  return (
+    <div className="reserve-table-shell" data-testid="reserve-table-shell">
+      <a
+        href="#contact"
+        className="reserve-table-btn"
+        data-testid="reserve-table-btn"
+        aria-label="Reserve a Table"
+      >
+        <span className="reserve-table-icon" aria-hidden="true">
+          <Utensils size={16} />
+        </span>
+        <span className="reserve-table-label">Reserve a Table</span>
+        <span className="reserve-table-arrow" aria-hidden="true">
+          <ArrowRight size={16} />
+        </span>
+      </a>
+    </div>
+  );
+}
+
 function Hero({ slides }) {
   const safeSlides = slides && slides.length ? slides : [];
   const [active, setActive] = useState(0);
@@ -152,14 +174,17 @@ function Hero({ slides }) {
     setActive(index);
   };
 
-  const renderLayer = (slide, key, isActive) => {
+  const renderLayer = (slide, key, isActive, slideIndex) => {
     if (!slide) return null;
     const type = getMediaType(slide);
+    // Slides 2-5 (index 1..4) get the premium menu-card background overlay
+    const showMenuCardBg = slideIndex > 0;
     return (
       <div
-        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'}`}
+        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${slideIndex === 0 ? 'hero-layer-video' : 'hero-layer-media'}`}
         key={key}
         aria-hidden="true"
+        data-testid={`hero-layer-${slideIndex}`}
       >
         {type === 'video' ? (
           <video
@@ -199,6 +224,11 @@ function Hero({ slides }) {
         ) : (
           <img src={slide.mediaUrl} alt="" loading={isActive ? 'eager' : 'lazy'} />
         )}
+        {showMenuCardBg && (
+          <div className="hero-menu-card-bg" aria-hidden="true">
+            <img src="/assets/menu/menu-card-bg.jpeg" alt="" loading="lazy" />
+          </div>
+        )}
       </div>
     );
   };
@@ -207,10 +237,10 @@ function Hero({ slides }) {
   const totalStr = String(total).padStart(2, '0');
 
   return (
-    <section className="hero" id="home">
+    <section className={`hero hero-split hero-slide-${active}`} id="home" data-testid="hero-section">
       <div className="hero-stage">
-        {renderLayer(prevSlide, `prev-${prev}`, false)}
-        {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true)}
+        {renderLayer(prevSlide, `prev-${prev}`, false, prev ?? 0)}
+        {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true, active)}
       </div>
       <div className="hero-overlay" />
       <div className="hero-vignette" aria-hidden="true" />
@@ -316,13 +346,13 @@ function About() {
           hospitality excellence, brand depth, operational consistency, and long-term franchise value.
         </p>
       </div>
-      <div className="founder-row">
+      <div className="founder-row founder-row-premium" data-testid="founders-row">
         {founders.map((founder) => (
-          <article className="founder-card" key={founder.name}>
+          <article className="founder-card founder-card-premium" key={founder.name} data-testid={`founder-card-${founder.name}`}>
             <img src={founder.image} alt={founder.name} loading="lazy" />
-            <div>
+            <div className="founder-card-body">
+              <span className="founder-role-tag">{founder.position}</span>
               <h3>{founder.name}</h3>
-              <p>{founder.position}</p>
             </div>
           </article>
         ))}
@@ -396,79 +426,49 @@ function Brands({ brands }) {
   );
 }
 
-function MenuShowcase({ brands, items }) {
-  const [brand, setBrand] = useState('All Brands');
+function MenuShowcase({ items }) {
   const [category, setCategory] = useState('All');
-  const showcaseFillers = [
-    {
-      name: 'Smoked Butter Chicken Platter',
-      brand: 'Magnaura the food Village',
-      category: 'Dining',
-      price: 749,
-      description: 'Slow-finished chicken with silk gravy, charred breads, and jeweled garnish.',
-      imageUrl: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=900&q=85',
-    },
-    {
-      name: 'Golden Chilli Cheese Momos',
-      brand: "Mag'Momo",
-      category: 'Fusion',
-      price: 269,
-      description: 'Crisp dumplings tossed with chilli glaze, cheese cream, and spring onion.',
-      imageUrl: 'https://images.unsplash.com/photo-1600628422019-7c31b4e4b476?auto=format&fit=crop&w=900&q=85',
-    },
-  ];
-  const showcaseItems = useMemo(() => {
-    const existingNames = new Set(items.map((item) => item.name));
-    return [...items, ...showcaseFillers.filter((item) => !existingNames.has(item.name))];
-  }, [items]);
-  const categories = useMemo(
-    () => ['All', ...new Set(showcaseItems.filter((item) => brand === 'All Brands' || item.brand === brand).map((item) => item.category))],
-    [brand, showcaseItems],
-  );
-  const visible = items.filter((item) => {
-    const matchBrand = brand === 'All Brands' || item.brand === brand;
-    const matchCategory = category === 'All' || item.category === category;
-    return matchBrand && matchCategory;
-  });
-  const visibleMenu = (visible.length ? visible : showcaseItems)
-    .concat(showcaseItems.filter((item) => !visible.some((visibleItem) => visibleItem.name === item.name)))
-    .slice(0, 8);
-
-  useEffect(() => {
-    if (brand !== 'All Brands' && !brands.find((item) => item.name === brand)) setBrand('All Brands');
-  }, [brands, brand]);
+  const categories = ['All', 'Chef Special'];
+  const visibleMenu = useMemo(() => {
+    if (category === 'All') return items;
+    return items.filter((item) => item.category === category);
+  }, [items, category]);
 
   return (
-    <section className="section menu-section" id="menu">
+    <section className="section menu-section" id="menu" data-testid="menu-section">
       <div className="section-heading">
-        <span className="eyebrow">Menu Showcase</span>
-        <h2>Curated signatures from every Magnaura brand.</h2>
+        <span className="eyebrow">Menu · MAGNAURA THE FOOD VILLAGE</span>
+        <h2>Chef-curated signatures from every category.</h2>
+        <p style={{ marginTop: '18px' }}>
+          One highest-priced Chef&apos;s Special from every menu category — pulled directly from the MAGNAURA THE FOOD VILLAGE
+          menu with authentic names and prices preserved.
+        </p>
       </div>
-      <div className="menu-controls">
-        <div className="segmented">
-          <button className={brand === 'All Brands' ? 'active' : ''} onClick={() => setBrand('All Brands')}>
-            All Brands
-          </button>
-          {brands.map((item) => (
-            <button className={brand === item.name ? 'active' : ''} key={item.name} onClick={() => setBrand(item.name)}>
-              {item.name}
-            </button>
-          ))}
-        </div>
-        <div className="segmented">
+      <div className="menu-controls menu-controls-simple">
+        <div className="segmented" data-testid="menu-filter">
           {categories.map((item) => (
-            <button className={category === item ? 'active' : ''} key={item} onClick={() => setCategory(item)}>
+            <button
+              className={category === item ? 'active' : ''}
+              key={item}
+              onClick={() => setCategory(item)}
+              data-testid={`menu-filter-${item.toLowerCase().replace(/\s+/g, '-')}`}
+            >
               {item}
             </button>
           ))}
         </div>
       </div>
-      <div className="menu-grid">
+      <div className="menu-grid" data-testid="menu-grid">
         {visibleMenu.map((item) => (
-          <article className="menu-card" key={item.name}>
-            <img src={item.imageUrl} alt={item.name} loading="lazy" />
-            <div>
-              <span>{item.category}</span>
+          <article className="menu-card menu-card-luxury" key={item.name} data-testid={`menu-item-${item.name}`}>
+            <div className="menu-card-media">
+              <img src={item.imageUrl} alt={item.name} loading="lazy" />
+              <div className="menu-card-plate-bg" aria-hidden="true">
+                <img src="/assets/menu/menu-card-bg.jpeg" alt="" loading="lazy" />
+              </div>
+            </div>
+            <div className="menu-card-body">
+              <span>{item.section || item.category}</span>
               <h3>{item.name}</h3>
               <p>{item.description}</p>
               <strong>Rs. {item.price}</strong>
@@ -617,11 +617,12 @@ export default function App() {
   return (
     <>
       <Navbar brands={brands} />
+      <ReserveTableButton />
       <main>
         <Hero slides={heroSlides} />
         <About />
         <Brands brands={brands} />
-        <MenuShowcase brands={brands} items={menuItems} />
+        <MenuShowcase items={menuItems} />
         <Franchise brands={brands} />
         <Contact brands={brands} />
       </main>
