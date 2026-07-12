@@ -1,6 +1,6 @@
 export const heroSlides = [
   {
-    title: 'Taste The Legacy',
+    title: 'Taste The\nLegacy',
     subtitle: 'Tradition, innovation, and unforgettable hospitality.',
     cta: 'Partner With Us',
     mediaType: 'video',
@@ -10,7 +10,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'A World of Flavors. One Vision.',
+    title: 'A World of\nFlavors. One\nVision.',
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
@@ -19,7 +19,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Building the Future of Hospitality',
+    title: 'Building the\nFuture of\nHospitality',
     subtitle: 'Exceptional brands crafted for modern consumers.',
     cta: 'Explore Our Brands',
     mediaType: 'image',
@@ -28,7 +28,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Designed for Modern Hospitality',
+    title: 'Designed for\nModern\nHospitality',
     subtitle: 'Elegant service, inspired interiors, and memorable guest journeys.',
     cta: 'See Our Vision',
     mediaType: 'image',
@@ -37,7 +37,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Experiences that Last',
+    title: 'Experiences\nthat Last',
     subtitle: 'A seamless blend of storytelling, taste, and atmosphere.',
     cta: 'Discover More',
     mediaType: 'image',

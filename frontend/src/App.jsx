@@ -298,32 +298,35 @@ function Hero({ slides }) {
       </div>
 
       <div className="hero-nav" role="tablist" aria-label="Hero slides">
-        {safeSlides.map((slide, index) => (
-          <button
-            key={slide.title}
-            className={`hero-nav-item ${index === active ? 'active' : ''}`}
-            onClick={() => goTo(index)}
-            aria-label={`Show slide ${index + 1}: ${slide.title}`}
-            data-testid={`hero-indicator-${index}`}
-          >
-            {index === active ? (
-              <a
-                href={activeCtaHref}
-                className="gold-button hero-nav-cta"
-                onClick={(e) => e.stopPropagation()}
-                data-testid="hero-cta"
-              >
-                {activeSlide.cta} <ArrowRight size={16} />
-              </a>
-            ) : (
-              <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
-            )}
-            <span className="hero-nav-track">
-              <span className="hero-nav-fill" key={`${index}-${active}`} />
-            </span>
-            <span className="hero-nav-label">{slide.title}</span>
-          </button>
-        ))}
+        {safeSlides.map((slide, index) => {
+          const cleanTitle = (slide.title || '').replace(/\n/g, ' ');
+          return (
+            <button
+              key={cleanTitle}
+              className={`hero-nav-item ${index === active ? 'active' : ''}`}
+              onClick={() => goTo(index)}
+              aria-label={`Show slide ${index + 1}: ${cleanTitle}`}
+              data-testid={`hero-indicator-${index}`}
+            >
+              {index === active ? (
+                <a
+                  href={activeCtaHref}
+                  className="gold-button hero-nav-cta"
+                  onClick={(e) => e.stopPropagation()}
+                  data-testid="hero-cta"
+                >
+                  {activeSlide.cta} <ArrowRight size={16} />
+                </a>
+              ) : (
+                <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
+              )}
+              <span className="hero-nav-track">
+                <span className="hero-nav-fill" key={`${index}-${active}`} />
+              </span>
+              <span className="hero-nav-label">{cleanTitle}</span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );
