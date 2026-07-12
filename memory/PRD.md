@@ -12,7 +12,22 @@ Stack: Vite + React 18 + Framer Motion + Node/Express + MongoDB. Backend is wrap
 
 ---
 
-## Session (2026-01) — Phase 3 Refinement
+## Session (2026-01, Phase 3-video) — Hero Video Enhancement
+
+### Delivered
+- Replaced Hero Slide 1 with the client-uploaded watermark-free video `129575-744709905_medium.mp4` (chef flambé with pan-fire).
+- **Cinematic ffmpeg pipeline** applied end-to-end (server-side, exported as a static `.mp4`):
+  - **16:9 landscape reformat** — original portrait 720×1280 rendered inside a 1920×1080 canvas with a heavily blurred + darkened duplicate on the sides (`boxblur=40:2, eq=brightness=-0.18:saturation=0.85`).
+  - **Cinematic slow motion** — `setpts=1.6*PTS` → 62.5% speed, 11 s source becomes 17.6 s smooth playback.
+  - **Michelin-star colour grade** — `eq contrast=1.40 brightness=-0.09 saturation=1.35`, curves lowering shadows/lifting highlights, `colorbalance rs=0.10 gs=0.03 bs=-0.12` for warm golden tones, `unsharp 5:5:0.8` micro-contrast on flames.
+  - **Subtle vignette** — `vignette=PI/3.8` for shallow-DOF look.
+  - **Web-optimized export** — H.264 Main Profile Level 4.0, `yuv420p`, `crf 22`, `+faststart` moov-atom re-order for instant playback start.
+  - Extracted a rich-frame poster (`mag-hero-poster.jpg`) so the first paint already shows the cinematic composition.
+- Layout, hero text, CTAs, typography, navigation and animations were NOT touched.
+
+### Video Enhancement Constraints
+- 4K UHD / 60 fps / HDR: source is 720p @ 30 fps so 4K/HDR up-conversion is not real information — output remains 1920×1080 at 30 fps to preserve authentic quality (no fake upscaling).
+- No AI generative VFX added: flames, embers, smoke and heat distortion come naturally from the pipeline's contrast/curve/warmth boost — kept "physically believable" as requested.
 Scope: Refine specific parts of the site only. Preserve navbar, footer, typography, existing text, colours and branding.
 
 ### Delivered (Phase 3)
