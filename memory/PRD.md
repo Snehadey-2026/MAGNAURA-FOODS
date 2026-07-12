@@ -3,70 +3,69 @@
 ## Project
 Premium hospitality corporate site for MAGNAURA FOODS (parent brand of Mag'Momo, Momo's Adda, Mag'Rolls, Panchtatva Chai, Magnaura the food Village).
 
-Stack: Vite + React 18 + Framer Motion + Node/Express + MongoDB. Backend is wrapped by a Python FastAPI proxy on port 8001 (`backend/server.py`) which spawns the Node/Express app and forwards `/api/*` requests to it, satisfying platform supervisor while keeping the existing Node.js code intact.
+Stack: Vite + React 18 + Framer Motion + Node/Express + MongoDB. Backend is wrapped by a Python FastAPI proxy on port 8001 (`backend/server.py`) which spawns the Node/Express app and forwards `/api/*` requests to it.
 
 ## Personas
-- **Diners** browsing brand story, menu highlights and gallery, reserving a table.
-- **Franchise partners** discovering brands, submitting franchise applications.
-- **Corporate leads** contacting hospitality group for partnerships & press.
+- **Diners** — browsing brand story, menu highlights and gallery; reserving a table directly on the home page.
+- **Franchise partners** — discovering brands, submitting franchise applications.
+- **Corporate leads** — contacting the hospitality group for partnerships & press.
 
 ---
 
-## Session (2026-01) — Phase 2 Website Enhancement
-Scope: Enhance ONLY the seven sections listed by the client. All other layout, typography, colors, animations, routes and hierarchy preserved verbatim.
+## Session (2026-01) — Phase 3 Refinement
+Scope: Refine specific parts of the site only. Preserve navbar, footer, typography, existing text, colours and branding.
 
-### Delivered (Phase 2)
-1. **Hero Slider — Desktop split layout**
-   - `hero-split`: text stays LEFT (max-width ~55%), food image stays RIGHT (`object-position: right center`) with a left-side emerald gradient overlay guaranteeing readability.
-   - No overlap, existing hero copy, typography, buttons and animations untouched.
-2. **Menu-card watermark — Hero slides 2‒5**
-   - Uploaded green MAGNAURA menu card image (`/assets/menu/menu-card-bg.jpeg`) rendered as a subtle tilted stamp (blur 1px, opacity 0.55, `mix-blend`, drift animation) in the bottom-right — visible on-screen but non-obtrusive. Excluded from Slide 1.
-3. **About — Premium co-founder cards**
-   - New `founder-card-premium` class mirrors `brand-card` style: 560px min-height, full-bleed image, gradient overlay, gold role tag + serif name, smooth `translateY` + scale hover, gold border on hover.
-4. **Home / Brands — Mag'Rolls fix**
-   - Replaced pizza image with an authentic paneer kathi-roll photo (`/assets/brands/mag-rolls.jpg`, CC BY-SA 4.0, Wikimedia Commons — Shafana jasmine, Wiki Loves Food 2021).
-5. **Menu Section — PDF-driven Chef Specials**
-   - `menuItems` in `fallback.js` fully rebuilt from the MAGNAURA THE FOOD VILLAGE PDF: 23 Chef Special items, one highest-priced dish per category, names and prices verbatim (e.g. `PATTY KULCHA (2PCS)` Rs.169, `CHEF SPECIAL DOSA` Rs.229, `4 IN 1 PIZZA (ANY FLAVOR)` Rs.599, `TANDOORI PLATTER` Rs.599, `PANEER-E-ZAFRANI BIRYANI` Rs.369, etc.).
-   - Filters simplified to only **All** and **Chef Special** (brand chips and other category chips removed).
-   - `menu-card-luxury` cards show section label, exact name, description, Rs. price, and the menu-card image subtly blended into the body background.
-6. **Reserve a Table button**
-   - Fixed glass-morphism CTA under the navbar: gold gradient border, blur 18px, champagne shimmer sweep on hover, `Utensils` + `ArrowRight` icons, letter-spacing expansion on hover.
-   - Scroll-aware — fades out after scrolling past 75% of the viewport so it never overlaps section headings (e.g. Contact H2).
-7. **Gallery Page rebuild**
-   - Real site navbar (identical behavior; logo returns to `/`, dropdowns/menu items link back to home anchors).
-   - Cinematic full-width hero video (`/assets/hero/mag-hero.mp4`) with slow Ken-Burns zoom, warm cinematic filter, layered dark overlay + vignette for text readability.
-   - "Download Hero Reel" CTA linking to `/downloads/MAGNAURA-HERO-VIDEO.mp4`.
-   - Four premium masonry sections: **Restaurant Interior**, **Events**, **Fire Shows**, **Customer Moments**. 18 tiles total, mixed image/video, `loading=lazy`, hover scale + border glow.
+### Delivered (Phase 3)
+1. **Hero (legacy full-bleed layout restored)**
+   - Reverted to the earlier reference layout: full-bleed slide background with left-aligned text overlaid using a strong dark→transparent gradient. No two-column split.
+   - Slide 1 is the chef-flambé video (`/assets/hero/mag-hero.mp4`, phase-2 upload) with cinematic CSS grading (`brightness 0.78 · contrast 1.34 · saturate 1.38`), ember-glow radial layer, darker vignette and `playbackRate = 0.75` slow-motion feel. Extracted first-frame poster (`mag-hero-poster.jpg`) prevents mis-poster flash.
+   - Slides 2–5 use the pre-baked slide images (food + menu book baked in) — matches the client-provided reference screenshots exactly.
+   - Bottom hero nav has 5 slide indicators with the slide title label under each. The active indicator hosts the inline CTA (`Partner With Us` / `Discover Magnaura Foods` / …). Meta counter (`01 — 05 / MAGNAURA · FOODS`) sits top-right.
+2. **Reserve a Table → on-page Reservation form**
+   - Button now smooth-scrolls to a new `#reservation` section (no route navigation).
+   - Full glass-morphism form: Full Name, Mobile Number, Email, Number of Guests, Date, Time, Special Request. Professional validation for every field (min length, phone regex, email regex, date, time, guest range).
+   - Submits via `api.submitContact` fallback with localStorage backup. On success, transitions to a "Thank you, {name}" confirmation panel with the guest count / date / time / mobile echoed back, plus a `Make Another Reservation` reset button.
+3. **Menu section — verified against uploaded PDF**
+   - `menuItems` in `fallback.js` continues to carry one highest-priced Chef Special per PDF category (23 items). Names and prices are the exact spelling and value from the MAGNAURA THE FOOD VILLAGE PDF (verified during Phase 3 testing).
+   - Filters remain exactly: **All** and **Chef Special** (no other chips).
+4. **Gallery page — simplified**
+   - Structure is now: **Hero Video → Restaurant Event Videos (2 items) → Restaurant Photos (6 items)**. Old sections (Fire Shows / Customer Moments / long masonry) removed.
+   - Hero uses `/assets/gallery/fire-juggler.mp4` (client-uploaded 129575-744709905_medium.mp4) with cinematic filter, Ken-Burns zoom and dark overlay + vignette for text readability. Poster frame extracted for zero-jump paint.
+   - Event Videos card grid (2 tiles), Photos grid (6 lazy-loaded WebP-style Unsplash tiles) with hover scale + border glow.
+5. **All download / public asset URLs removed**
+   - Deleted `/app/frontend/public/downloads/` folder.
+   - Removed "Download Hero Reel" CTA and any `<a download>` / `.mp4 href` / "Download" text from the site.
+   - Confirmed by the testing agent's dedicated DOM audit on both `/` and `/gallery` routes.
+6. **Video web-optimisation**
+   - Both hero and gallery videos re-encoded to H.264 Constrained Baseline / Level 3.1 with `+faststart` moov-atom re-ordering for instant playback start (`ffmpeg -c:v libx264 -profile baseline -level 3.1 -movflags +faststart`).
+7. **Preserved**
+   - Navbar, footer, brand colour palette, typography (Playfair Display + Cormorant Garamond + Inter), all About/Brands/Franchise/Contact sections, hero text copy, existing buttons, all Phase 2 gains (chef-special menu items from PDF, premium founder cards, authentic Mag'Rolls photo, menu-card watermark).
 
-### Video handling (Sections 1 & 8)
-- No AI video-generation tool is available in-environment; recreated video files cannot be produced here. The uploaded reference `MAGHEROVIDEO1.mp4` is used directly as the hero and gallery hero video (no watermark manipulation), with CSS cinematic filters (`filter: brightness(0.62) saturate(1.14) contrast(1.14)`) and Ken-Burns motion for premium presentation.
-- A downloadable copy is exposed at `/downloads/MAGNAURA-HERO-VIDEO.mp4` for the client to save into their project files.
+### Known limitations / notes
+- **No AI video-generation tool** is available in-environment. The uploaded reference videos are used directly with CSS cinematic filters (brightness, contrast, saturation, slow-motion via `playbackRate`) — an "enhanced-look" video cannot be re-rendered/exported into a new `.mp4` here.
+- The chef-flambé source video (`mag-hero.mp4`) carries an "envato" watermark from the reference upload. Per the client's own Phase 2 instruction, we do NOT crop, blur or hide watermarks. A watermark-free re-shoot (or licensed Envato original) should be dropped into `/app/frontend/public/assets/hero/mag-hero.mp4` when available — no code change needed.
+- In Playwright's headless Chromium, videos may report `readyState=0` due to strict autoplay policy. In real user browsers with default settings, `autoplay + muted + playsInline + preload="auto"` starts instantly.
 
 ### Files touched (this session)
-- `frontend/src/App.jsx` — Hero split renderLayer, MenuShowcase simplified to All/Chef Special, ReserveTableButton with scroll-hide, `founder-card-premium` markup, imports (Utensils, useEffect).
-- `frontend/src/pages/GalleryPage.jsx` — Full rebuild (site Navbar, Reserve button, cinematic hero video, four masonry sections, download CTA).
-- `frontend/src/data/fallback.js` — Chef-Special menuItems from PDF + Mag'Rolls heroImage swap.
-- `frontend/src/styles.css` — hero-split, hero-menu-card-bg + drift, reserve-table-btn + hide/show, founder-card-premium, menu-card-luxury, gallery-hero + zoom, gallery-section, gallery-masonry.
-- `backend/server.py` — new FastAPI proxy that spawns the Node.js Express backend (existing `index.js` preserved).
-- `backend/.env` — MONGO_URL, DB_NAME, EMERGENT_LLM_KEY placeholders required by platform.
-- New assets: `public/assets/hero/mag-hero.mp4` (uploaded reference), `public/assets/menu/menu-card-bg.jpeg`, `public/assets/brands/mag-rolls.jpg`, `public/downloads/MAGNAURA-HERO-VIDEO.mp4`.
-
-### Preserved (untouched)
-Navbar structure and dropdowns, About body copy, Brands grid layout, Franchise band, Contact form, Footer, base color tokens, hero animations, routes, Admin pages, API endpoints and behavior.
+- `frontend/src/App.jsx` — Reverted Hero to full-bleed layout, added Reservation function + form + success state, `ReserveTableButton` now smooth-scrolls to `#reservation`.
+- `frontend/src/pages/GalleryPage.jsx` — Simplified to hero + 2 event videos + 6 photos, removed download CTA, added video `load()`+`play()` ref hook and poster.
+- `frontend/src/data/fallback.js` — Slide-1 poster switched to `mag-hero-poster.jpg`.
+- `frontend/src/styles.css` — Full CSS rewrite of the Hero section (legacy layout), new `.reservation-section`, `.event-video-*`, `.photo-*` blocks.
+- `backend/server.py` — (Phase 2) FastAPI proxy for the Node backend, preserved.
+- `public/assets/hero/mag-hero.mp4` (Phase-2 chef flambé), `public/assets/hero/mag-hero-poster.jpg`, `public/assets/gallery/fire-juggler.mp4` (Phase-3 juggler), `public/assets/gallery/fire-juggler-poster.jpg`.
+- `public/downloads/` folder REMOVED.
 
 ---
 
 ## Backlog
-- **(P1)** Seed the MongoDB `menuitems` collection with the same PDF Chef Specials via `/api/admin/menu` so the backend supplies the data (currently served from `fallback.js`).
-- **(P1)** Recreate/replace the hero flambé video with a watermark-free, higher-resolution original (out-of-scope for in-env AI tooling — needs external videographer / Runway / Sora upload). Player wiring already targets `/assets/hero/mag-hero.mp4` so swap is a one-file drop-in.
-- **(P2)** Split `App.jsx` into `components/` (Hero.jsx, MenuShowcase.jsx, Founders.jsx, ReserveTableButton.jsx) for maintainability.
-- **(P2)** Extract a bespoke first-frame poster from `mag-hero.mp4` for zero-jump video first paint.
-- **(P2)** Add WebP variants for Unsplash/Wikimedia stills served from the Brands & Gallery grids.
-- **(P3)** Optional un-mute toggle on hero video, and IntersectionObserver-based reveal for masonry tiles below the fold.
+- **(P1)** Provide a licensed, watermark-free hero video (Envato paid download or original re-shoot) and drop into `/assets/hero/mag-hero.mp4`.
+- **(P2)** Dedicated `/api/reservations` backend endpoint (currently piggy-backing on `submitContact`).
+- **(P2)** Split `App.jsx` (~815 lines) into `components/Hero.jsx`, `Reservation.jsx`, `MenuShowcase.jsx`, etc., for maintainability.
+- **(P2)** Self-host the Gallery photos (currently Unsplash URLs) for reliability and offline capability.
+- **(P3)** Optional un-mute toggle on hero video; IntersectionObserver-based reveals for below-the-fold grids; WebP variants for all raster assets.
 
 ---
 
-## Test Report — Iteration 1 (Phase 2)
-- Frontend success rate: **100%** (Playwright automated, desktop + mobile).
-- Backend: skipped per scope (proxy verified via `/api/health` returning 200).
-- Only cosmetic finding — Reserve a Table button overlapping Contact heading — fixed in same session via scroll-based hide (`is-hidden` class).
+## Test Reports
+- **Iteration 1 (Phase 2):** 100% frontend pass — all 8 Phase-2 changes verified.
+- **Iteration 2 (Phase 3):** 100% frontend pass — 32/32 assertions verified: hero layout, reserve-to-reservation smooth scroll, reservation validation + submission + success + reset, menu PDF integrity, simplified gallery structure, download-link audit on both routes, mobile responsiveness.
