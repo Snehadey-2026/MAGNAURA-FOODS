@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ArrowRight,
   ChevronDown,
@@ -100,13 +100,26 @@ function GalleryNavbar({ brands }) {
 }
 
 function ReserveTableButton() {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const handler = () => {
+      setVisible(window.scrollY < window.innerHeight * 0.75);
+    };
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
   return (
-    <div className="reserve-table-shell" data-testid="reserve-table-shell">
+    <div
+      className={`reserve-table-shell ${visible ? 'is-visible' : 'is-hidden'}`}
+      data-testid="reserve-table-shell"
+    >
       <Link
         to="/#contact"
         className="reserve-table-btn"
         data-testid="reserve-table-btn"
         aria-label="Reserve a Table"
+        tabIndex={visible ? 0 : -1}
       >
         <span className="reserve-table-icon" aria-hidden="true">
           <Utensils size={16} />

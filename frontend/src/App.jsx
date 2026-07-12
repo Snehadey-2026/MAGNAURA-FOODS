@@ -122,13 +122,27 @@ function Navbar({ brands }) {
 }
 
 function ReserveTableButton() {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const handler = () => {
+      // Hide the floating button once user scrolls past ~85vh (past hero)
+      setVisible(window.scrollY < window.innerHeight * 0.75);
+    };
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
   return (
-    <div className="reserve-table-shell" data-testid="reserve-table-shell">
+    <div
+      className={`reserve-table-shell ${visible ? 'is-visible' : 'is-hidden'}`}
+      data-testid="reserve-table-shell"
+    >
       <a
         href="#contact"
         className="reserve-table-btn"
         data-testid="reserve-table-btn"
         aria-label="Reserve a Table"
+        tabIndex={visible ? 0 : -1}
       >
         <span className="reserve-table-icon" aria-hidden="true">
           <Utensils size={16} />
