@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   ArrowRight,
   ChevronDown,
-  Download,
   Menu as MenuIcon,
   Utensils,
   X,
@@ -12,11 +11,12 @@ import {
 import { usePublicData } from '../hooks/usePublicData';
 
 /* ============================================================
-   GALLERY PAGE – Phase 2 rebuild
-   - Uses the same Navbar behavior as the Home page
-   - Full-width cinematic hero video (uploaded reference)
-   - Sections: Restaurant Interior, Events, Fire Shows, Customer Moments
-   - Masonry grid, lazy-loaded, premium hover animations
+   GALLERY PAGE — Phase 3 simplification
+   Sections in order:
+     1. Hero video (fire juggler, cinematic)
+     2. Restaurant Event Videos (2–3 videos)
+     3. Restaurant Photos (elegant grid)
+   Nothing else.
    ============================================================ */
 
 function GalleryNavbar({ brands }) {
@@ -99,7 +99,7 @@ function GalleryNavbar({ brands }) {
   );
 }
 
-function ReserveTableButton() {
+function GalleryReserveButton() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const handler = () => {
@@ -115,7 +115,7 @@ function ReserveTableButton() {
       data-testid="reserve-table-shell"
     >
       <Link
-        to="/#contact"
+        to="/#reservation"
         className="reserve-table-btn"
         data-testid="reserve-table-btn"
         aria-label="Reserve a Table"
@@ -133,199 +133,87 @@ function ReserveTableButton() {
   );
 }
 
-const gallerySections = [
+const eventVideos = [
   {
-    id: 'restaurant-interior',
-    eyebrow: 'Ambience',
-    title: 'Restaurant Interior',
-    description:
-      'Warm woods, emerald tones and champagne gold accents — every dining hall is designed to feel like a private celebration.',
-    tiles: [
-      {
-        span: 'span-tall',
-        type: 'image',
-        label: 'Main Hall',
-        title: 'Emerald Dining Hall',
-        src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=85',
-      },
-      {
-        span: 'span-wide',
-        type: 'image',
-        label: 'Lounge',
-        title: 'Private Lounge Setup',
-        src: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Detail',
-        title: 'Chef\u2019s Counter',
-        src: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Detail',
-        title: 'Bar & Mixology',
-        src: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Alcove',
-        title: 'Family Seating Alcove',
-        src: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=900&q=85',
-      },
-    ],
+    title: 'Live Fire Juggling Performance',
+    label: 'Signature Event',
+    src: '/assets/gallery/fire-juggler.mp4',
   },
   {
-    id: 'events',
-    eyebrow: 'Occasions',
-    title: 'Events',
-    description:
-      'Anniversaries, corporate soirees, family celebrations — where the space transforms for the moment.',
-    tiles: [
-      {
-        span: 'span-wide',
-        type: 'image',
-        label: 'Celebration',
-        title: 'Anniversary Evening',
-        src: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1400&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Corporate',
-        title: 'Business Gathering',
-        src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Buffet',
-        title: 'Live Buffet Reveal',
-        src: 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-lg',
-        type: 'image',
-        label: 'Toast',
-        title: 'A Night to Remember',
-        src: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=1400&q=85',
-      },
-    ],
-  },
-  {
-    id: 'fire-shows',
-    eyebrow: 'Signature',
-    title: 'Fire Shows',
-    description:
-      'Cinematic live-fire performances that turn dinner into a spectacle — sparks, chef\u2019s theatre and slow-motion flames.',
-    tiles: [
-      {
-        span: 'span-tall',
-        type: 'video',
-        label: 'Signature Show',
-        title: 'Chef\u2019s Flambé Performance',
-        src: '/assets/hero/mag-hero.mp4',
-      },
-      {
-        span: 'span-wide',
-        type: 'image',
-        label: 'Live Fire',
-        title: 'Torchlit Table Service',
-        src: 'https://images.unsplash.com/photo-1543722530-d2c3201371e7?auto=format&fit=crop&w=1400&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Sparks',
-        title: 'Sparks & Steel',
-        src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Flame',
-        title: 'Slow-Motion Flame',
-        src: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=900&q=85',
-      },
-    ],
-  },
-  {
-    id: 'customer-moments',
-    eyebrow: 'Guests',
-    title: 'Customer Moments',
-    description:
-      'The heart of MAGNAURA — laughter shared over plates, families gathered, memories built one meal at a time.',
-    tiles: [
-      {
-        span: 'span-wide',
-        type: 'image',
-        label: 'Family',
-        title: 'Family Dining Moment',
-        src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Toast',
-        title: 'A Warm Toast',
-        src: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-md',
-        type: 'image',
-        label: 'Guests',
-        title: 'Return Guests',
-        src: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=85',
-      },
-      {
-        span: 'span-lg',
-        type: 'image',
-        label: 'Together',
-        title: 'Around a Shared Plate',
-        src: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=85',
-      },
-      {
-        span: 'span-tall',
-        type: 'image',
-        label: 'Smile',
-        title: 'A Memorable Smile',
-        src: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=900&q=85',
-      },
-    ],
+    title: 'Chef\u2019s Flambé at the Pass',
+    label: 'Kitchen Theatre',
+    src: '/assets/hero/mag-hero.mp4',
   },
 ];
 
-function GalleryTile({ tile, index }) {
-  const isVideo = tile.type === 'video';
+const restaurantPhotos = [
+  {
+    title: 'Emerald Dining Hall',
+    src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85',
+    span: 'wide',
+  },
+  {
+    title: 'Private Lounge',
+    src: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Chef\u2019s Counter',
+    src: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Bar & Mixology',
+    src: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=85',
+    span: 'tall',
+  },
+  {
+    title: 'Family Seating Alcove',
+    src: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Signature Plating',
+    src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=85',
+  },
+];
+
+function EventVideoCard({ video, index }) {
   return (
     <motion.article
-      className={`gallery-tile ${tile.span || 'span-md'}`}
+      className="event-video-card"
       initial={{ opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay: (index % 6) * 0.06, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      data-testid={`gallery-tile-${tile.title}`}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ delay: index * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      data-testid={`event-video-${video.title}`}
     >
-      {isVideo ? (
-        <video
-          src={tile.src}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
-      ) : (
-        <img src={tile.src} alt={tile.title} loading="lazy" decoding="async" />
-      )}
-      <div className="tile-caption">
-        <span>{tile.label}</span>
-        <h4>{tile.title}</h4>
+      <video
+        src={video.src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <div className="event-video-caption">
+        <span>{video.label}</span>
+        <h4>{video.title}</h4>
       </div>
     </motion.article>
+  );
+}
+
+function PhotoTile({ photo, index }) {
+  return (
+    <motion.figure
+      className={`photo-tile photo-tile-${photo.span || 'md'}`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay: (index % 6) * 0.05, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      data-testid={`photo-tile-${photo.title}`}
+    >
+      <img src={photo.src} alt={photo.title} loading="lazy" decoding="async" />
+      <figcaption>{photo.title}</figcaption>
+    </motion.figure>
   );
 }
 
@@ -335,19 +223,30 @@ export default function GalleryPage() {
   return (
     <>
       <GalleryNavbar brands={brands} />
-      <ReserveTableButton />
+      <GalleryReserveButton />
 
       <main>
         <section className="gallery-hero" data-testid="gallery-hero">
           <video
-            src="/assets/hero/mag-hero.mp4"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            poster="/assets/hero/slide2-north-indian.png"
-          />
+            poster="/assets/gallery/fire-juggler-poster.jpg"
+            ref={(el) => {
+              if (!el) return;
+              el.muted = true;
+              el.playbackRate = 0.85;
+              el.load();
+              const tryPlay = () => el.play().catch(() => {});
+              tryPlay();
+              el.addEventListener('loadeddata', tryPlay, { once: true });
+              el.addEventListener('canplay', tryPlay, { once: true });
+            }}
+          >
+            <source src="/assets/gallery/fire-juggler.mp4" type="video/mp4" />
+          </video>
           <div className="gallery-hero-content">
             <motion.span
               className="eyebrow"
@@ -369,40 +268,47 @@ export default function GalleryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
             >
-              A living portfolio of interiors, events, fire shows and the guest moments that
-              define the MAGNAURA hospitality experience.
+              A living portfolio of live performances, kitchen theatre and the guest moments
+              that define the MAGNAURA hospitality experience.
             </motion.p>
-            <motion.a
-              href="/downloads/MAGNAURA-HERO-VIDEO.mp4"
-              download
-              className="gold-button"
-              style={{ marginTop: '28px' }}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              data-testid="gallery-hero-download"
-            >
-              <Download size={16} /> Download Hero Reel
-            </motion.a>
           </div>
         </section>
 
-        {gallerySections.map((section) => (
-          <section key={section.id} id={section.id} className="gallery-section" data-testid={`gallery-section-${section.id}`}>
-            <div className="gallery-section-heading">
-              <div>
-                <span className="eyebrow">{section.eyebrow}</span>
-                <h2>{section.title}</h2>
-                <p style={{ maxWidth: '620px', marginTop: '10px' }}>{section.description}</p>
-              </div>
+        <section className="gallery-section" data-testid="gallery-section-events" id="event-videos">
+          <div className="gallery-section-heading">
+            <div>
+              <span className="eyebrow">Restaurant Event Videos</span>
+              <h2>Live theatre, every evening.</h2>
+              <p style={{ maxWidth: '620px', marginTop: '10px' }}>
+                Signature performances captured on the floor — the fire juggler, the chef&apos;s flambé,
+                and the moments guests remember.
+              </p>
             </div>
-            <div className="gallery-masonry">
-              {section.tiles.map((tile, index) => (
-                <GalleryTile key={`${section.id}-${index}`} tile={tile} index={index} />
-              ))}
+          </div>
+          <div className="event-video-grid">
+            {eventVideos.map((video, i) => (
+              <EventVideoCard key={video.title} video={video} index={i} />
+            ))}
+          </div>
+        </section>
+
+        <section className="gallery-section" data-testid="gallery-section-photos" id="restaurant-photos">
+          <div className="gallery-section-heading">
+            <div>
+              <span className="eyebrow">Restaurant Photos</span>
+              <h2>Interiors, plating and ambience.</h2>
+              <p style={{ maxWidth: '620px', marginTop: '10px' }}>
+                Warm woods, emerald tones and champagne gold — every corner of MAGNAURA is
+                designed for a private celebration.
+              </p>
             </div>
-          </section>
-        ))}
+          </div>
+          <div className="photo-grid">
+            {restaurantPhotos.map((photo, i) => (
+              <PhotoTile key={photo.title} photo={photo} index={i} />
+            ))}
+          </div>
+        </section>
       </main>
     </>
   );

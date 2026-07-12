@@ -228,32 +228,39 @@ video {
   background: #030d0b;
 }
 
+/* ============================================================
+   PHASE 3: HERO (legacy full-bleed layout — matches reference)
+   Slide 1 = chef flambé video with cinematic grade
+   Slides 2..5 = full-bleed slide images (menu book baked in)
+   Text overlaid on the LEFT with a strong dark gradient.
+   ============================================================ */
+
 .hero-stage {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  z-index: 0;
 }
 
 .hero-layer {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transform: scale(1.08);
+  transform: scale(1.02);
   transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
 .hero-layer.is-active {
   opacity: 1;
-  animation: hero-kenburns 8s ease-out forwards;
+  animation: hero-kenburns 10s ease-out forwards;
+  z-index: 1;
 }
 
 .hero-layer.is-leaving {
   opacity: 0;
   z-index: 0;
 }
-
-.hero-layer.is-active { z-index: 1; }
 
 .hero-layer img,
 .hero-layer video {
@@ -263,119 +270,40 @@ video {
   display: block;
 }
 
-/* ============================================================
-   PHASE 2: HERO SPLIT LAYOUT (Desktop text-left / media-right)
-   ============================================================ */
-.hero-split .hero-content {
-  width: min(600px, 55%);
-  padding-right: 32px;
+/* Cinematic grade for the chef flambé video (Slide 1) */
+.hero-layer-video video {
+  filter:
+    brightness(0.78)
+    contrast(1.34)
+    saturate(1.38);
 }
 
-@media (min-width: 981px) {
-  .hero-split .hero-stage::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 56%;
-    z-index: 2;
-    background:
-      linear-gradient(90deg,
-        rgba(3, 22, 20, 0.98) 0%,
-        rgba(3, 22, 20, 0.9) 60%,
-        rgba(3, 22, 20, 0.35) 92%,
-        rgba(3, 22, 20, 0) 100%);
-    pointer-events: none;
-  }
-
-  .hero-split .hero-overlay {
-    background:
-      linear-gradient(90deg, rgba(3, 22, 20, 0.32) 0%, rgba(3, 22, 20, 0) 45%, rgba(3, 22, 20, 0) 100%),
-      linear-gradient(0deg, rgba(4, 10, 9, 0.75), rgba(4, 10, 9, 0.05) 50%, rgba(4, 10, 9, 0.30) 100%);
-  }
-
-  .hero-split .hero-layer img,
-  .hero-split .hero-layer video {
-    object-position: right center;
-  }
-}
-
-/* Premium menu-card watermark background for slides 2..5 only */
-.hero-menu-card-bg {
+/* Ember glow + darker vignette on video slide */
+.hero-layer-video::after {
+  content: '';
   position: absolute;
-  z-index: 4;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
-  right: 4%;
-  bottom: 12%;
-  width: min(230px, 20vw);
-  aspect-ratio: 4 / 5;
-  opacity: 0.55;
-  filter: blur(1px) saturate(1.1) brightness(1.05);
-  transform: rotate(-5deg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(232, 200, 122, 0.25);
-  animation: menu-card-drift 12s ease-in-out infinite alternate;
-  mix-blend-mode: normal;
+  background:
+    radial-gradient(ellipse at 62% 52%, rgba(255, 138, 30, 0.22), transparent 42%),
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+  mix-blend-mode: screen;
 }
 
-.hero-menu-card-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.95) contrast(1.05);
-}
-
-@keyframes menu-card-drift {
-  0% { transform: rotate(-4deg) translateY(0); }
-  100% { transform: rotate(-2deg) translateY(-8px); }
-}
-
-@media (max-width: 980px) {
-  .hero-menu-card-bg {
-    width: min(200px, 40vw);
-    right: 4%;
-    bottom: 20%;
-    opacity: 0.15;
-  }
-  .hero-split .hero-content {
-    width: 100%;
-    padding-right: 0;
-  }
-}
-
-@keyframes hero-kenburns {
-  0% {
-    transform: scale(1.02) translate3d(0, 0, 0);
-    filter: saturate(1.02) contrast(1);
-  }
-  100% {
-    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
-    filter: saturate(1.06) contrast(1.04);
-  }
-}
-
-.hero-media,
-.hero-media img,
-.hero-media video,
+/* Left-side dark gradient overlay — ensures text readability */
 .hero-overlay {
   position: absolute;
   inset: 0;
-}
-
-.hero-media img,
-.hero-media video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-overlay {
   z-index: 2;
   background:
-    linear-gradient(90deg, rgba(3, 22, 20, 0.94) 0%, rgba(3, 22, 20, 0.58) 46%, rgba(3, 22, 20, 0.22) 100%),
-    linear-gradient(0deg, rgba(4, 10, 9, 0.9), rgba(4, 10, 9, 0.05) 50%, rgba(4, 10, 9, 0.35) 100%);
+    linear-gradient(90deg,
+      rgba(3, 22, 20, 0.95) 0%,
+      rgba(3, 22, 20, 0.82) 24%,
+      rgba(3, 22, 20, 0.48) 46%,
+      rgba(3, 22, 20, 0.12) 70%,
+      rgba(3, 22, 20, 0) 100%),
+    linear-gradient(0deg, rgba(4, 10, 9, 0.85), rgba(4, 10, 9, 0.05) 50%, rgba(4, 10, 9, 0.30) 100%);
   pointer-events: none;
 }
 
@@ -384,7 +312,7 @@ video {
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
   mix-blend-mode: multiply;
 }
 
@@ -393,69 +321,38 @@ video {
   inset: -10%;
   z-index: 4;
   pointer-events: none;
-  opacity: 0.08;
+  opacity: 0.07;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: 240px 240px;
 }
 
+/* Hero text — LEFT ALIGNED, occupies at most ~48% of viewport */
 .hero-content {
   position: relative;
   z-index: 5;
-  width: min(760px, 100%);
-  min-width: 0;
-  padding-top: 48px;
+  width: min(720px, 52%);
+  max-width: 100%;
+  padding-top: 24px;
   color: var(--ivory);
   text-shadow: 0 2px 26px rgba(0, 0, 0, 0.5);
 }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  color: var(--champagne);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-h1,
-h2,
-h3 {
-  margin: 0;
+.hero-content h1 {
+  margin-top: 22px;
   font-family: 'Playfair Display', Georgia, serif;
-  letter-spacing: 0;
-}
-
-h1 {
-  max-width: 780px;
-  margin-top: 18px;
   color: var(--ivory);
-  font-size: clamp(3.2rem, 8vw, 7.7rem);
-  line-height: 0.94;
-}
-
-h2 {
-  margin-top: 14px;
-  font-size: clamp(2.1rem, 4.7vw, 4.8rem);
-  line-height: 1.02;
-}
-
-h3 {
-  font-size: 1.45rem;
-}
-
-p {
-  color: var(--muted);
-  line-height: 1.72;
+  font-size: clamp(3rem, 7.8vw, 7.4rem);
+  line-height: 0.98;
 }
 
 .hero-content p {
-  max-width: 560px;
-  margin: 24px 0 34px;
+  max-width: 480px;
+  margin: 28px 0 0;
   color: rgba(248, 247, 242, 0.88);
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.35rem, 2.4vw, 2.05rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+  line-height: 1.6;
 }
 
 .hero-cta {
@@ -469,15 +366,16 @@ p {
   box-shadow: 0 22px 46px rgba(212, 175, 55, 0.32);
 }
 
+/* Meta counter — top-right ("02 — 05 / MAGNAURA · FOODS") */
 .hero-meta {
   position: absolute;
   z-index: 5;
   top: 132px;
-  right: max(28px, 5vw);
+  right: max(28px, 6vw);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 12px;
+  gap: 8px;
   color: var(--champagne);
   font-family: 'Playfair Display', serif;
   letter-spacing: 0.06em;
@@ -487,12 +385,12 @@ p {
 .hero-meta-counter {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 12px;
+  font-size: 0.95rem;
 }
 
 .hero-meta-counter strong {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--ivory);
   line-height: 1;
@@ -513,13 +411,13 @@ p {
 
 .hero-meta-brand {
   font-family: 'Inter', sans-serif;
-  font-size: 0.66rem;
-  letter-spacing: 0.32em;
-  color: rgba(232, 200, 122, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.34em;
+  color: rgba(232, 200, 122, 0.78);
   text-transform: uppercase;
-  writing-mode: initial;
 }
 
+/* Bottom slide navigation — 5 items with title labels */
 .hero-nav {
   position: absolute;
   z-index: 5;
@@ -528,14 +426,14 @@ p {
   bottom: 42px;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
+  gap: 18px;
 }
 
 .hero-nav-item {
   display: grid;
   grid-template-rows: auto auto auto;
   align-items: start;
-  gap: 8px;
+  gap: 10px;
   padding: 14px 4px 0;
   border: 0;
   background: transparent;
@@ -543,8 +441,9 @@ p {
   cursor: pointer;
   text-align: left;
   transition: color 0.4s ease;
-  border-top: 1px solid rgba(232, 200, 122, 0.18);
+  border-top: 1px solid rgba(232, 200, 122, 0.22);
   position: relative;
+  min-width: 0;
 }
 
 .hero-nav-item::before {
@@ -554,36 +453,38 @@ p {
   left: 0;
   right: 0;
   height: 1px;
-  background: rgba(232, 200, 122, 0.4);
+  background: rgba(232, 200, 122, 0.55);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.5s ease;
 }
 
-.hero-nav-item.active::before {
-  transform: scaleX(1);
-}
-
-.hero-nav-item.active {
-  color: var(--ivory);
-}
-
-.hero-nav-item:hover {
-  color: var(--champagne);
-}
+.hero-nav-item.active::before { transform: scaleX(1); }
+.hero-nav-item.active { color: var(--ivory); }
+.hero-nav-item:hover  { color: var(--champagne); }
 
 .hero-nav-index {
   font-family: 'Playfair Display', serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
   color: var(--champagne);
+}
+
+.hero-nav-cta {
+  justify-self: start;
+  padding: 10px 18px;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  min-height: 42px;
+  border-radius: 999px;
+  gap: 8px;
 }
 
 .hero-nav-track {
   position: relative;
   display: block;
   height: 2px;
-  background: rgba(248, 247, 242, 0.14);
+  background: rgba(248, 247, 242, 0.16);
   overflow: hidden;
   border-radius: 2px;
 }
@@ -597,18 +498,18 @@ p {
 }
 
 .hero-nav-item.active .hero-nav-fill {
-  animation: hero-progress 6s linear forwards;
+  animation: hero-progress 6.5s linear forwards;
 }
 
 @keyframes hero-progress {
   from { width: 0%; }
-  to { width: 100%; }
+  to   { width: 100%; }
 }
 
 .hero-nav-label {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(0.92rem, 1vw, 1.05rem);
-  line-height: 1.25;
+  font-size: clamp(0.9rem, 1vw, 1.02rem);
+  line-height: 1.3;
   letter-spacing: 0.02em;
   color: inherit;
   min-height: 2.4em;
@@ -618,9 +519,72 @@ p {
   overflow: hidden;
 }
 
-.hero-dots {
-  display: none;
+@keyframes hero-kenburns {
+  0%   { transform: scale(1.02) translate3d(0, 0, 0); filter: saturate(1.02); }
+  100% { transform: scale(1.12) translate3d(-1%, -0.8%, 0); filter: saturate(1.08); }
 }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .hero-content { width: 100%; }
+  .hero-content h1 { font-size: clamp(2.8rem, 10vw, 4.4rem); }
+  .hero-meta { top: 108px; right: 20px; }
+  .hero-meta-brand { display: none; }
+  .hero-overlay {
+    background:
+      linear-gradient(180deg, rgba(3, 22, 20, 0) 0%, rgba(3, 22, 20, 0.35) 40%, rgba(3, 22, 20, 0.92) 100%);
+  }
+  .hero-nav {
+    left: 20px;
+    right: 20px;
+    bottom: 26px;
+    gap: 8px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .hero-nav-label { display: none; }
+  .hero-nav-cta { padding: 6px 10px; font-size: 0.68rem; min-height: 32px; letter-spacing: 0.1em; }
+}
+
+@media (max-width: 680px) {
+  .hero { padding-inline: 20px; }
+  .hero-content p { font-size: 1.1rem; }
+  .hero-nav-index { font-size: 0.72rem; }
+}
+
+/* Base heading defaults (used across the site) */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--champagne);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-top: 14px;
+  font-size: clamp(2.1rem, 4.7vw, 4.8rem);
+  line-height: 1.02;
+}
+
+h3 {
+  font-size: 1.45rem;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.72;
+}
+
 
 .section {
   width: min(1180px, calc(100% - 40px));
@@ -2102,3 +2066,319 @@ p {
   }
 }
 
+
+/* ============================================================
+   PHASE 3: RESERVATION SECTION (glassmorphism on-page form)
+   ============================================================ */
+.reservation-section {
+  padding: 84px 0 104px;
+}
+
+.reservation-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 46px clamp(24px, 4vw, 56px) 46px;
+  color: var(--ivory);
+  background:
+    linear-gradient(140deg, rgba(7, 59, 52, 0.55) 0%, rgba(3, 18, 16, 0.65) 100%);
+  backdrop-filter: blur(24px) saturate(1.15);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  border: 1px solid rgba(232, 200, 122, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(232, 200, 122, 0.24),
+    0 34px 90px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.reservation-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 12% 8%, rgba(232, 200, 122, 0.14), transparent 45%),
+    radial-gradient(ellipse at 88% 92%, rgba(212, 175, 55, 0.10), transparent 55%);
+  pointer-events: none;
+}
+
+.reservation-header {
+  max-width: 640px;
+  margin-bottom: 36px;
+}
+
+.reservation-header .eyebrow { color: var(--champagne); }
+
+.reservation-header h2 {
+  margin-top: 12px;
+  color: var(--ivory);
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  line-height: 1.04;
+}
+
+.reservation-header p {
+  margin-top: 12px;
+  color: rgba(248, 247, 242, 0.78);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+}
+
+.reservation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+.reservation-full { grid-column: 1 / -1; }
+
+.reservation-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--champagne);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.reservation-form input,
+.reservation-form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 200, 122, 0.24);
+  background: rgba(4, 20, 18, 0.55);
+  color: var(--ivory);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.reservation-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.reservation-form input::placeholder,
+.reservation-form textarea::placeholder {
+  color: rgba(248, 247, 242, 0.4);
+}
+
+.reservation-form input:focus,
+.reservation-form textarea:focus {
+  outline: none;
+  border-color: rgba(232, 200, 122, 0.7);
+  background: rgba(4, 20, 18, 0.75);
+  box-shadow: 0 0 0 4px rgba(232, 200, 122, 0.12);
+}
+
+.reservation-form label.has-error input,
+.reservation-form label.has-error textarea {
+  border-color: rgba(224, 92, 92, 0.75);
+}
+
+.reservation-form em {
+  font-style: normal;
+  color: #ff9a9a;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.reservation-submit {
+  margin-top: 30px;
+  padding: 16px 28px;
+  font-size: 0.86rem;
+  letter-spacing: 0.22em;
+}
+
+.reservation-success {
+  text-align: center;
+}
+
+.reservation-success h2 {
+  margin-top: 14px;
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+}
+
+.reservation-success p {
+  max-width: 620px;
+  margin: 20px auto 30px;
+  color: rgba(248, 247, 242, 0.86);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+}
+
+.reservation-success strong {
+  color: var(--champagne);
+}
+
+@media (max-width: 720px) {
+  .reservation-card { padding: 32px 22px; }
+  .reservation-grid { grid-template-columns: 1fr; gap: 16px; }
+  .reservation-submit { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   PHASE 3: SIMPLIFIED GALLERY (event videos + photo grid)
+   ============================================================ */
+.event-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 22px;
+}
+
+.event-video-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  aspect-ratio: 16 / 10;
+  background: #050f0d;
+  border: 1px solid rgba(232, 200, 122, 0.18);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.55s ease,
+              border-color 0.55s ease;
+  isolation: isolate;
+}
+
+.event-video-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.6s ease;
+  filter: saturate(1.05) contrast(1.04);
+}
+
+.event-video-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(232, 200, 122, 0.6);
+  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.5);
+}
+
+.event-video-card:hover video {
+  transform: scale(1.05);
+  filter: saturate(1.14) contrast(1.08);
+}
+
+.event-video-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 20, 18, 0) 55%, rgba(4, 20, 18, 0.95) 100%);
+  pointer-events: none;
+}
+
+.event-video-caption {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 24px;
+  display: grid;
+  gap: 6px;
+}
+
+.event-video-caption span {
+  color: var(--champagne);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.event-video-caption h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--ivory);
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+  margin: 0;
+  font-weight: 400;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 150px;
+  gap: 16px;
+}
+
+.photo-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #050f0d;
+  border: 1px solid rgba(232, 200, 122, 0.14);
+  margin: 0;
+  isolation: isolate;
+  grid-column: span 4;
+  grid-row: span 2;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.55s ease,
+              border-color 0.55s ease;
+}
+
+.photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.55s ease;
+  filter: saturate(1.02) contrast(1.02);
+}
+
+.photo-tile:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232, 200, 122, 0.5);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45);
+}
+
+.photo-tile:hover img {
+  transform: scale(1.08);
+  filter: saturate(1.1) contrast(1.06);
+}
+
+.photo-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 20, 18, 0) 55%, rgba(4, 20, 18, 0.9) 100%);
+  pointer-events: none;
+}
+
+.photo-tile figcaption {
+  position: absolute;
+  z-index: 2;
+  bottom: 16px;
+  left: 20px;
+  right: 20px;
+  color: var(--ivory);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.photo-tile-wide { grid-column: span 8; grid-row: span 3; }
+.photo-tile-tall { grid-column: span 4; grid-row: span 3; }
+
+@media (max-width: 980px) {
+  .photo-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 130px;
+  }
+  .photo-tile { grid-column: span 3; }
+  .photo-tile-wide { grid-column: span 6; grid-row: span 2; }
+  .photo-tile-tall { grid-column: span 3; grid-row: span 2; }
+}
+
+@media (max-width: 680px) {
+  .photo-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
+  .photo-tile,
+  .photo-tile-wide,
+  .photo-tile-tall { grid-column: 1; grid-row: span 1; }
+}

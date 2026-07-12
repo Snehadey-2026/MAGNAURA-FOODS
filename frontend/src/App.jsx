@@ -125,20 +125,25 @@ function ReserveTableButton() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const handler = () => {
-      // Hide the floating button once user scrolls past ~85vh (past hero)
       setVisible(window.scrollY < window.innerHeight * 0.75);
     };
     handler();
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
+  const scrollToReservation = (e) => {
+    e.preventDefault();
+    const el = document.getElementById('reservation');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   return (
     <div
       className={`reserve-table-shell ${visible ? 'is-visible' : 'is-hidden'}`}
       data-testid="reserve-table-shell"
     >
       <a
-        href="#contact"
+        href="#reservation"
+        onClick={scrollToReservation}
         className="reserve-table-btn"
         data-testid="reserve-table-btn"
         aria-label="Reserve a Table"
@@ -167,7 +172,7 @@ function Hero({ slides }) {
     const timer = setInterval(() => {
       setPrev(active);
       setActive((value) => (value + 1) % total);
-    }, 6000);
+    }, 6500);
     return () => clearInterval(timer);
   }, [total, active]);
 
@@ -191,11 +196,12 @@ function Hero({ slides }) {
   const renderLayer = (slide, key, isActive, slideIndex) => {
     if (!slide) return null;
     const type = getMediaType(slide);
-    // Slides 2-5 (index 1..4) get the premium menu-card background overlay
-    const showMenuCardBg = slideIndex > 0;
+    const isVideoSlide = slideIndex === 0;
     return (
       <div
-        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${slideIndex === 0 ? 'hero-layer-video' : 'hero-layer-media'}`}
+        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${
+          isVideoSlide ? 'hero-layer-video' : 'hero-layer-image'
+        }`}
         key={key}
         aria-hidden="true"
         data-testid={`hero-layer-${slideIndex}`}
@@ -213,11 +219,12 @@ function Hero({ slides }) {
             ref={(el) => {
               if (!el) return;
               el.muted = true;
+              // Cinematic slow-motion feel for the chef flambé
+              el.playbackRate = 0.75;
               const attempt = () => {
                 const p = el.play();
                 if (p && typeof p.catch === 'function') {
                   p.catch(() => {
-                    // Silent retry on next user interaction
                     const retry = () => {
                       el.play().catch(() => {});
                       document.removeEventListener('click', retry);
@@ -238,11 +245,6 @@ function Hero({ slides }) {
         ) : (
           <img src={slide.mediaUrl} alt="" loading={isActive ? 'eager' : 'lazy'} />
         )}
-        {showMenuCardBg && (
-          <div className="hero-menu-card-bg" aria-hidden="true">
-            <img src="/assets/menu/menu-card-bg.jpeg" alt="" loading="lazy" />
-          </div>
-        )}
       </div>
     );
   };
@@ -251,12 +253,12 @@ function Hero({ slides }) {
   const totalStr = String(total).padStart(2, '0');
 
   return (
-    <section className={`hero hero-split hero-slide-${active}`} id="home" data-testid="hero-section">
+    <section className={`hero hero-legacy hero-slide-${active}`} id="home" data-testid="hero-section">
       <div className="hero-stage">
         {renderLayer(prevSlide, `prev-${prev}`, false, prev ?? 0)}
         {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true, active)}
       </div>
-      <div className="hero-overlay" />
+      <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-vignette" aria-hidden="true" />
       <div className="hero-grain" aria-hidden="true" />
 
@@ -284,16 +286,6 @@ function Hero({ slides }) {
         >
           {activeSlide.subtitle}
         </motion.p>
-        <motion.a
-          className="gold-button hero-cta"
-          href={activeCtaHref}
-          key={`cta-${active}`}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
-        >
-          {activeSlide.cta} <ArrowRight size={18} />
-        </motion.a>
       </motion.div>
 
       <div className="hero-meta" aria-hidden="true">
@@ -305,15 +297,27 @@ function Hero({ slides }) {
         <span className="hero-meta-brand">MAGNAURA · FOODS</span>
       </div>
 
-      <div className="hero-nav">
+      <div className="hero-nav" role="tablist" aria-label="Hero slides">
         {safeSlides.map((slide, index) => (
           <button
             key={slide.title}
             className={`hero-nav-item ${index === active ? 'active' : ''}`}
             onClick={() => goTo(index)}
             aria-label={`Show slide ${index + 1}: ${slide.title}`}
+            data-testid={`hero-indicator-${index}`}
           >
-            <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
+            {index === active ? (
+              <a
+                href={activeCtaHref}
+                className="gold-button hero-nav-cta"
+                onClick={(e) => e.stopPropagation()}
+                data-testid="hero-cta"
+              >
+                {activeSlide.cta} <ArrowRight size={16} />
+              </a>
+            ) : (
+              <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
+            )}
             <span className="hero-nav-track">
               <span className="hero-nav-fill" key={`${index}-${active}`} />
             </span>
@@ -625,6 +629,170 @@ function Footer({ brands }) {
   );
 }
 
+function Reservation() {
+  const [form, setForm] = useState({});
+  const [status, setStatus] = useState('');
+  const [errors, setErrors] = useState({});
+  const setValue = (key, value) => setForm((f) => ({ ...f, [key]: value }));
+
+  const validate = () => {
+    const e = {};
+    if (!form.fullName || form.fullName.trim().length < 2) e.fullName = 'Please enter your full name';
+    if (!/^\+?\d[\d\s-]{7,}$/.test(form.mobile || '')) e.mobile = 'Enter a valid mobile number';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email || '')) e.email = 'Enter a valid email';
+    if (!form.date) e.date = 'Choose a date';
+    if (!form.time) e.time = 'Choose a time';
+    const guests = Number(form.guests);
+    if (!guests || guests < 1 || guests > 30) e.guests = 'Guests must be between 1 and 30';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (!validate()) return;
+    setStatus('Sending...');
+    try {
+      await api.submitContact({
+        fullName: form.fullName,
+        email: form.email,
+        subject: `Table Reservation for ${form.date} at ${form.time} (${form.guests} guests)`,
+        message: `Mobile: ${form.mobile}\nGuests: ${form.guests}\nSpecial Request: ${form.specialRequest || 'None'}`,
+      });
+    } catch {
+      const key = 'magnaura_reservations';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      localStorage.setItem(key, JSON.stringify([{ ...form, createdAt: new Date().toISOString() }, ...existing]));
+    }
+    setStatus('success');
+  };
+
+  if (status === 'success') {
+    return (
+      <section className="section reservation-section" id="reservation" data-testid="reservation-section">
+        <div className="reservation-card reservation-success" data-testid="reservation-success">
+          <span className="eyebrow">Reservation Confirmed</span>
+          <h2>Thank you, {form.fullName?.split(' ')[0] || 'Guest'}.</h2>
+          <p>
+            Your table request for <strong>{form.guests}</strong> on <strong>{form.date}</strong> at{' '}
+            <strong>{form.time}</strong> has been received. Our hospitality team will confirm your reservation
+            over a call at <strong>{form.mobile}</strong> shortly.
+          </p>
+          <button
+            className="gold-button"
+            type="button"
+            onClick={() => {
+              setForm({});
+              setStatus('');
+            }}
+            data-testid="reservation-new-btn"
+          >
+            Make Another Reservation <ArrowRight size={16} />
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section reservation-section" id="reservation" data-testid="reservation-section">
+      <div className="reservation-card" data-testid="reservation-card">
+        <div className="reservation-header">
+          <span className="eyebrow">Reserve a Table</span>
+          <h2>Curated hospitality, reserved for you.</h2>
+          <p>
+            Share your preferred date, time and party size — our team will confirm your table personally.
+          </p>
+        </div>
+        <form className="reservation-form" onSubmit={submit} data-testid="reservation-form" noValidate>
+          <div className="reservation-grid">
+            <label className={errors.fullName ? 'has-error' : ''}>
+              <span>Full Name</span>
+              <input
+                type="text"
+                placeholder="Your Full Name"
+                value={form.fullName || ''}
+                onChange={(e) => setValue('fullName', e.target.value)}
+                data-testid="reservation-fullname"
+              />
+              {errors.fullName && <em>{errors.fullName}</em>}
+            </label>
+            <label className={errors.mobile ? 'has-error' : ''}>
+              <span>Mobile Number</span>
+              <input
+                type="tel"
+                placeholder="+91 98765 43210"
+                value={form.mobile || ''}
+                onChange={(e) => setValue('mobile', e.target.value)}
+                data-testid="reservation-mobile"
+              />
+              {errors.mobile && <em>{errors.mobile}</em>}
+            </label>
+            <label className={errors.email ? 'has-error' : ''}>
+              <span>Email</span>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={form.email || ''}
+                onChange={(e) => setValue('email', e.target.value)}
+                data-testid="reservation-email"
+              />
+              {errors.email && <em>{errors.email}</em>}
+            </label>
+            <label className={errors.guests ? 'has-error' : ''}>
+              <span>Number of Guests</span>
+              <input
+                type="number"
+                min="1"
+                max="30"
+                placeholder="2"
+                value={form.guests || ''}
+                onChange={(e) => setValue('guests', e.target.value)}
+                data-testid="reservation-guests"
+              />
+              {errors.guests && <em>{errors.guests}</em>}
+            </label>
+            <label className={errors.date ? 'has-error' : ''}>
+              <span>Date</span>
+              <input
+                type="date"
+                value={form.date || ''}
+                min={new Date().toISOString().split('T')[0]}
+                onChange={(e) => setValue('date', e.target.value)}
+                data-testid="reservation-date"
+              />
+              {errors.date && <em>{errors.date}</em>}
+            </label>
+            <label className={errors.time ? 'has-error' : ''}>
+              <span>Time</span>
+              <input
+                type="time"
+                value={form.time || ''}
+                onChange={(e) => setValue('time', e.target.value)}
+                data-testid="reservation-time"
+              />
+              {errors.time && <em>{errors.time}</em>}
+            </label>
+            <label className="reservation-full">
+              <span>Special Request</span>
+              <textarea
+                placeholder="Anniversary celebration, dietary preferences, seating requests…"
+                value={form.specialRequest || ''}
+                onChange={(e) => setValue('specialRequest', e.target.value)}
+                data-testid="reservation-request"
+              />
+            </label>
+          </div>
+          <button className="gold-button reservation-submit" type="submit" data-testid="reservation-submit">
+            Confirm Reservation <ArrowRight size={18} />
+          </button>
+          {status && status !== 'success' && <p className="form-status">{status}</p>}
+        </form>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
   const { heroSlides, brands, menuItems } = usePublicData();
 
@@ -637,6 +805,7 @@ export default function App() {
         <About />
         <Brands brands={brands} />
         <MenuShowcase items={menuItems} />
+        <Reservation />
         <Franchise brands={brands} />
         <Contact brands={brands} />
       </main>

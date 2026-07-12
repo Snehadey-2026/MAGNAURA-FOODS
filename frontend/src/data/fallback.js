@@ -5,7 +5,7 @@ export const heroSlides = [
     cta: 'Partner With Us',
     mediaType: 'video',
     mediaUrl: '/assets/hero/mag-hero.mp4',
-    poster: '/assets/hero/slide2-north-indian.png',
+    poster: '/assets/hero/mag-hero-poster.jpg',
     eyebrow: 'The MAGNAURA Signature',
     focal: 'center',
   },
