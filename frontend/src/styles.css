@@ -270,17 +270,6 @@ video {
   display: block;
 }
 
-/* Push both image AND video composition to the RIGHT side of the viewport on
-   desktop so the LEFT half stays clear for the hero text — matches slides 2-5. */
-@media (min-width: 981px) {
-  .hero-layer-image img,
-  .hero-layer-video video {
-    transform: scale(1.32);
-    transform-origin: 92% 50%;
-    transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-}
-
 /* Cinematic grade for the chef flambé video (Slide 1) */
 .hero-layer-video video {
   filter:
