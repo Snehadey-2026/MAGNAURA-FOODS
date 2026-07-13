@@ -10,7 +10,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'A World of\nFlavors. One\nVision.',
+    title: 'A World\nof Flavors.\nOne Vision.',
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
@@ -37,7 +37,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Experiences\nthat Last',
+    title: 'Experiences\nthat\nLast',
     subtitle: 'A seamless blend of storytelling, taste, and atmosphere.',
     cta: 'Discover More',
     mediaType: 'image',
