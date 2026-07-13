@@ -1,16 +1,16 @@
 export const heroSlides = [
   {
-    title: 'Taste The Legacy',
+    title: 'Taste The\nLegacy',
     subtitle: 'Tradition, innovation, and unforgettable hospitality.',
     cta: 'Partner With Us',
     mediaType: 'video',
     mediaUrl: '/assets/hero/mag-hero.mp4',
-    poster: '/assets/hero/slide2-north-indian.png',
+    poster: '/assets/hero/mag-hero-poster.jpg',
     eyebrow: 'The MAGNAURA Signature',
     focal: 'center',
   },
   {
-    title: 'A World of Flavors. One Vision.',
+    title: 'A World of\nFlavors. One\nVision.',
     subtitle: 'Creating iconic dining experiences across multiple brands.',
     cta: 'Discover Magnaura Foods',
     mediaType: 'image',
@@ -19,7 +19,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Building the Future of Hospitality',
+    title: 'Building the\nFuture of\nHospitality',
     subtitle: 'Exceptional brands crafted for modern consumers.',
     cta: 'Explore Our Brands',
     mediaType: 'image',
@@ -28,7 +28,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Designed for Modern Hospitality',
+    title: 'Designed for\nModern\nHospitality',
     subtitle: 'Elegant service, inspired interiors, and memorable guest journeys.',
     cta: 'See Our Vision',
     mediaType: 'image',
@@ -37,7 +37,7 @@ export const heroSlides = [
     focal: 'center',
   },
   {
-    title: 'Experiences that Last',
+    title: 'Experiences\nthat Last',
     subtitle: 'A seamless blend of storytelling, taste, and atmosphere.',
     cta: 'Discover More',
     mediaType: 'image',
@@ -85,8 +85,7 @@ export const brands = [
     description:
       'A modern rolls and wraps brand focused on premium fillings, quick service, and consistent franchise operations.',
     logoUrl: '',
-    heroImage:
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=85',
+    heroImage: '/assets/brands/mag-rolls.jpg',
   },
   {
     name: 'Panchtatva Chai',
@@ -129,68 +128,237 @@ export const galleryUpcoming = [
   },
 ];
 
+// Chef Special picks — one highest-priced item per menu category from the
+// authenticated MAGNAURA THE FOOD VILLAGE menu PDF. Names & prices verbatim.
 export const menuItems = [
   {
-    name: 'Tandoori Himalayan Momos',
-    brand: "Mag'Momo",
-    category: 'Signature',
-    price: 249,
-    description: 'Charred dumplings with saffron yogurt, spice smoke, and herb oil.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Truffle Mushroom Dumplings',
-    brand: "Mag'Momo",
-    category: 'Fusion',
-    price: 299,
-    description: 'Forest mushroom filling, truffle cream, toasted sesame, and scallion.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Royal Thali Experience',
-    brand: 'Magnaura the food Village',
-    category: 'Dining',
-    price: 899,
-    description: 'A curated tasting of regional classics with premium accompaniments.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Emerald Chef Table',
+    name: 'COLD COFFEE WITH ICE CREAM',
     brand: 'Magnaura the food Village',
     category: 'Chef Special',
-    price: 1499,
-    description: 'Seasonal fine-dining course with artisanal sauces and tableside finish.',
+    section: 'Hot & Cold Beverages',
+    price: 149,
+    description: "Chef's pick from Hot & Cold Beverages — the pinnacle of the section.",
     imageUrl:
-      'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=900&q=85',
+      'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=85',
   },
   {
-    name: 'Classic Adda Steam Momos',
-    brand: "Momo's Adda",
-    category: 'Classic',
+    name: 'PATTY KULCHA (2PCS)',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'North Indian Breakfast',
+    price: 169,
+    description: "Chef's pick from Indian (North Indian) Breakfast — the premium morning plate.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'CHEF SPECIAL DOSA',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'South Indian Breakfast',
+    price: 229,
+    description: "Chef's pick from South Indian Breakfast — house signature crisp dosa.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'DRY FRUIT SHAKE',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Shakes',
+    price: 199,
+    description: "Chef's pick from Shakes — indulgent, thick and richly garnished.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'RED BULL MOJITO',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Mocktails',
+    price: 229,
+    description: "Chef's pick from Mocktails — signature energising mint mojito.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'VEG MUSHROOM CHEESE MELT BALLS',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Continental Starter & Snacks',
+    price: 249,
+    description: "Chef's pick from Continental Starter & Snacks — molten cheese, forest mushroom.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1541014741259-de529411b96a?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: '4 IN 1 PIZZA (ANY FLAVOR)',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Pizza',
+    price: 599,
+    description: "Chef's pick from Pizza — four flavors on one grand stone-fired base.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'PANEER CUTLET (6 PCs)',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Evening Snacks',
+    price: 159,
+    description: "Chef's pick from Evening Snacks — crisp golden paneer cutlets.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'BROCCOLI ALMOND CHEESE SOUP',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Soup',
     price: 149,
-    description: 'Soft steamed momos with house chutney and comfort-first street-style flavor.',
+    description: "Chef's pick from Soup — velvet cream, toasted almond, aged cheese.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'CHINESE PLATTER',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Chinese Starters',
+    price: 399,
+    description: "Chef's pick from Chinese Starters — the signature grand platter.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'PANEER SIZZLER',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Sizzlers',
+    price: 299,
+    description: "Chef's pick from Sizzlers — tandoor-marinated paneer on smoking iron.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'CHINESE CHOPSEY PANEER',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Chinese Noodles',
+    price: 260,
+    description: "Chef's pick from Chinese Noodles — crispy noodle nest with paneer chopsey.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'SINGAPORE RICE PANEER',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Chinese Rice',
+    price: 210,
+    description: "Chef's pick from Chinese Rice — layered aromatic Singapore rice with paneer.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'KAJU KORMA',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Indian Main Course',
+    price: 299,
+    description: "Chef's pick from Indian Main Course — royal cashew korma with saffron.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'PANEER MAHARAJA',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Paneer Dishes',
+    price: 279,
+    description: "Chef's pick from Paneer Dishes — the regal Maharaja paneer curry.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'PANEER-E-ZAFRANI BIRYANI',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Rice & Biryani',
+    price: 369,
+    description: "Chef's pick from Rice & Biryani — saffron paneer dum biryani.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1633945274309-2c16c9eb8c40?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'BREAD BASKET',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Roasted Indian Bread Basket',
+    price: 249,
+    description: "Chef's pick from Roasted Indian Bread Basket — assorted tandoor breads.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'RUSSIAN SALAD',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Salad / Papad / Raita',
+    price: 199,
+    description: "Chef's pick from Salad / Papad / Raita — creamy Russian salad classic.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'TANDOORI PLATTER',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Tandoori Snacks',
+    price: 599,
+    description: "Chef's pick from Tandoori Snacks — the flagship kebab & tikka platter.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'TANDOORI MOMOS Paneer (9 PCs)',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Momos',
+    price: 260,
+    description: "Chef's pick from Momos — clay-oven paneer momos with chef's chutney.",
     imageUrl:
       'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=900&q=85',
   },
   {
-    name: 'Loaded Paneer Roll',
-    brand: "Mag'Rolls",
-    category: 'Rolls',
-    price: 199,
-    description: 'Flaky wrap layered with paneer, onions, sauces, and signature spice.',
+    name: 'TRIPLE SUNDAE',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Desserts',
+    price: 249,
+    description: "Chef's pick from Desserts — three-flavour indulgent sundae.",
     imageUrl:
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=85',
+      'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=900&q=85',
   },
   {
-    name: 'Panchtatva Kulhad Chai',
-    brand: 'Panchtatva Chai',
-    category: 'Chai',
-    price: 59,
-    description: 'Slow-brewed masala chai served with a premium earthy finish.',
+    name: 'JAIN PANEER MALAI TIKKA',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Jain Starters',
+    price: 269,
+    description: "Chef's pick from Jain Starters — creamy malai tikka, Jain-style.",
     imageUrl:
-      'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=900&q=85',
+      'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    name: 'VEG KORMA KASTURI',
+    brand: 'Magnaura the food Village',
+    category: 'Chef Special',
+    section: 'Jain Main Course',
+    price: 359,
+    description: "Chef's pick from Jain Main Course — Kasturi-scented royal korma.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=85',
   },
 ];

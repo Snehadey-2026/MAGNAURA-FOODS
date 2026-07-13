@@ -1,94 +1,379 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import {
+  ArrowRight,
+  ChevronDown,
+  Menu as MenuIcon,
+  Utensils,
+  X,
+} from 'lucide-react';
 import { usePublicData } from '../hooks/usePublicData';
-import { isVideoUrl } from '../App.jsx';
 
-function GalleryGrid({ items }) {
-  const sectionMotion = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
-  };
+/* ============================================================
+   GALLERY PAGE — Phase 3 simplification
+   Sections in order:
+     1. Hero video (fire juggler, cinematic)
+     2. Restaurant Event Videos (2–3 videos)
+     3. Restaurant Photos (elegant grid)
+   Nothing else.
+   ============================================================ */
 
-  const galleryItems = items.map((item, index) => {
-    const mediaUrl = item.heroImage || item.imageUrl || item.mediaUrl;
-    const mediaType = item.mediaType === 'video' || isVideoUrl(mediaUrl) ? 'video' : 'image';
+function GalleryNavbar({ brands }) {
+  const [open, setOpen] = useState(false);
+  const [brandOpen, setBrandOpen] = useState(false);
+  const links = ['ABOUT US', 'BRANDS', 'MENU', 'GALLERY', 'FRANCHISE'];
 
-    return {
-      title: item.name,
-      mediaUrl,
-      mediaType,
-      label: ['Dining', 'Signature', 'Experience', 'Craft', 'Hospitality'][index % 5],
-      description: item.description || 'A curated Magnaura hospitality moment with premium design and immersive atmosphere.',
-      href: item.website || '#brands',
-    };
-  });
+  const goHomeAnchor = (link) =>
+    `/#${link.toLowerCase().replace(' us', '').replace(' ', '-')}`;
 
   return (
-    <div className="gallery-grid-page">
-      {galleryItems.map((item, index) => (
-        <motion.article
-          className="gallery-card-page"
-          key={item.title}
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.05 }}
+    <header className="nav-shell" data-testid="gallery-nav-shell">
+      <nav className="navbar">
+        <Link to="/" className="logo-mark" aria-label="MAGNAURA FOODS home">
+          <span className="logo-emblem">M</span>
+          <span>
+            <strong>MAGNAURA</strong>
+            <small>FOODS</small>
+          </span>
+        </Link>
+        <button
+          className="icon-button mobile-only"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open menu"
+          data-testid="gallery-mobile-menu-btn"
         >
-          {item.mediaType === 'video' ? (
-            <video src={item.mediaUrl} controls muted loop playsInline />
-          ) : (
-            <img src={item.mediaUrl} alt={item.title} loading="lazy" />
+          {open ? <X size={20} /> : <MenuIcon size={20} />}
+        </button>
+        <div className={`nav-links ${open ? 'is-open' : ''}`}>
+          {links.map((link) =>
+            link === 'BRANDS' ? (
+              <div
+                className="nav-dropdown"
+                key={link}
+                onMouseEnter={() => setBrandOpen(true)}
+                onMouseLeave={() => setBrandOpen(false)}
+              >
+                <Link to="/#brands" onClick={() => setOpen(false)}>
+                  {link} <ChevronDown size={14} />
+                </Link>
+                <AnimatePresence>
+                  {brandOpen && (
+                    <motion.div
+                      className="dropdown-panel"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                    >
+                      {brands.map((brand) => (
+                        <a
+                          key={brand.name}
+                          href={brand.website || '/#brands'}
+                          target={brand.website ? '_blank' : undefined}
+                          rel={brand.website ? 'noreferrer noopener' : undefined}
+                          onClick={() => setOpen(false)}
+                        >
+                          {brand.name}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : link === 'GALLERY' ? (
+              <Link to="/gallery" key={link} onClick={() => setOpen(false)}>
+                {link}
+              </Link>
+            ) : (
+              <Link to={goHomeAnchor(link)} key={link} onClick={() => setOpen(false)}>
+                {link}
+              </Link>
+            ),
           )}
-          <div>
-            <span>{item.label}</span>
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-            <a className="gallery-link" href={item.href}>
-              Explore
-            </a>
-          </div>
-        </motion.article>
-      ))}
+          <Link className="nav-cta" to="/#contact" onClick={() => setOpen(false)}>
+            CONTACT US
+          </Link>
+        </div>
+      </nav>
+    </header>
+  );
+}
+
+function GalleryReserveButton() {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const handler = () => {
+      setVisible(window.scrollY < window.innerHeight * 0.75);
+    };
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+  return (
+    <div
+      className={`reserve-table-shell ${visible ? 'is-visible' : 'is-hidden'}`}
+      data-testid="reserve-table-shell"
+    >
+      <Link
+        to="/#reservation"
+        className="reserve-table-btn"
+        data-testid="reserve-table-btn"
+        aria-label="Reserve a Table"
+        tabIndex={visible ? 0 : -1}
+      >
+        <span className="reserve-table-icon" aria-hidden="true">
+          <Utensils size={16} />
+        </span>
+        <span className="reserve-table-label">Reserve a Table</span>
+        <span className="reserve-table-arrow" aria-hidden="true">
+          <ArrowRight size={16} />
+        </span>
+      </Link>
     </div>
   );
 }
 
+const eventVideos = [
+  {
+    title: 'MAGNAURA Grand Opening Night',
+    label: 'Signature Event',
+    src: '/assets/gallery/gallery-hero.mp4',
+    poster: '/assets/gallery/gallery-hero-poster.jpg',
+  },
+  {
+    title: 'Live Fire Juggling Performance',
+    label: 'Kitchen Theatre',
+    src: '/assets/gallery/fire-juggler.mp4',
+    poster: '/assets/gallery/fire-juggler-poster.jpg',
+  },
+  {
+    title: 'Chef\u2019s Flambé at the Pass',
+    label: 'Chef Theatre',
+    src: '/assets/hero/mag-hero.mp4',
+    poster: '/assets/hero/mag-hero-poster.jpg',
+  },
+];
+
+const restaurantPhotos = [
+  {
+    title: 'Emerald Dining Hall',
+    src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85',
+    span: 'wide',
+  },
+  {
+    title: 'Private Lounge',
+    src: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Chef\u2019s Counter',
+    src: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Bar & Mixology',
+    src: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=85',
+    span: 'tall',
+  },
+  {
+    title: 'Family Seating Alcove',
+    src: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1200&q=85',
+  },
+  {
+    title: 'Signature Plating',
+    src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=85',
+  },
+];
+
+function EventVideoCard({ video, index }) {
+  return (
+    <motion.article
+      className="event-video-card"
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ delay: index * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      data-testid={`event-video-${video.title}`}
+    >
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster={video.poster}
+        ref={(el) => {
+          if (!el) return;
+          el.muted = true;
+          el.load();
+          const p = () => el.play().catch(() => {});
+          p();
+          el.addEventListener('loadeddata', p, { once: true });
+          el.addEventListener('canplay', p, { once: true });
+        }}
+      >
+        <source src={video.src} type="video/mp4" />
+      </video>
+      <div className="event-video-caption">
+        <span>{video.label}</span>
+        <h4>{video.title}</h4>
+      </div>
+    </motion.article>
+  );
+}
+
+function PhotoTile({ photo, index }) {
+  return (
+    <motion.figure
+      className={`photo-tile photo-tile-${photo.span || 'md'}`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay: (index % 6) * 0.05, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      data-testid={`photo-tile-${photo.title}`}
+    >
+      <img src={photo.src} alt={photo.title} loading="lazy" decoding="async" />
+      <figcaption>{photo.title}</figcaption>
+    </motion.figure>
+  );
+}
+
 export default function GalleryPage() {
-  const { brands, galleryUpcoming } = usePublicData();
+  const { brands } = usePublicData();
 
   return (
     <>
-      <header className="nav-shell" style={{ position: 'relative', marginBottom: '0' }}>
-        <nav className="navbar">
-          <Link to="/" className="logo-mark" aria-label="MAGNAURA FOODS home">
-            <span className="logo-emblem">M</span>
-            <span>
-              <strong>MAGNAURA</strong>
-              <small>FOODS</small>
-            </span>
-          </Link>
-        </nav>
-      </header>
+      <GalleryNavbar brands={brands} />
+      <GalleryReserveButton />
 
       <main>
-        <section style={{ width: 'min(1180px, calc(100% - 40px))', margin: '0 auto', padding: '104px 0' }}>
-          <div className="section-heading">
-            <span className="eyebrow">Gallery</span>
-            <h2>Current and upcoming visual experiences.</h2>
-            <p>
-              Browse the latest imagery and video previews from our hospitality portfolio. Add new assets by updating the data source with image or video paths.
-            </p>
+        <section className="gallery-hero" data-testid="gallery-hero">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/assets/gallery/gallery-hero-poster.jpg"
+            ref={(el) => {
+              if (!el) return;
+              el.muted = true;
+              el.playbackRate = 0.9;
+              el.load();
+              const p = () => el.play().catch(() => {});
+              p();
+              el.addEventListener('loadeddata', p, { once: true });
+              el.addEventListener('canplay', p, { once: true });
+            }}
+          >
+            <source src="/assets/gallery/gallery-hero.mp4" type="video/mp4" />
+          </video>
+          <div className="gallery-hero-content">
+            <motion.span
+              className="eyebrow"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            >
+              MAGNAURA · Gallery
+            </motion.span>
+            <motion.h1
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Moments, made cinematic.
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            >
+              A living portfolio of live performances, kitchen theatre and the guest moments
+              that define the MAGNAURA hospitality experience.
+            </motion.p>
           </div>
+        </section>
 
-          <section style={{ marginTop: '68px' }}>
-            <h3 style={{ margin: '0 0 32px', fontSize: '1.6rem', fontWeight: '300', color: 'var(--ivory)' }}>Current Gallery</h3>
-            <GalleryGrid items={brands} />
-          </section>
+        <section className="gallery-section gallery-events-section" data-testid="gallery-section-events" id="event-videos">
+          <div className="gallery-section-heading">
+            <div>
+              <span className="eyebrow">Restaurant Event Videos</span>
+              <h2>Live theatre, every evening.</h2>
+              <p style={{ maxWidth: '620px', marginTop: '10px' }}>
+                Signature performances captured on the floor — grand openings, live fire artistry,
+                and the chef&apos;s flambé at the pass. The moments our guests remember.
+              </p>
+            </div>
+            <div className="gallery-events-stats" aria-hidden="true">
+              <div>
+                <strong>150+</strong>
+                <span>Curated Events</span>
+              </div>
+              <div>
+                <strong>24</strong>
+                <span>Signature Performances</span>
+              </div>
+              <div>
+                <strong>4.9</strong>
+                <span>Guest Rating</span>
+              </div>
+            </div>
+          </div>
+          <div className="event-video-grid">
+            {eventVideos.map((video, i) => (
+              <EventVideoCard key={video.title} video={video} index={i} />
+            ))}
+          </div>
+          <div className="gallery-events-marquee" aria-hidden="true">
+            <div className="gallery-events-marquee-track">
+              <span>Grand Openings</span>
+              <span aria-hidden="true">•</span>
+              <span>Anniversaries</span>
+              <span aria-hidden="true">•</span>
+              <span>Chef&apos;s Table</span>
+              <span aria-hidden="true">•</span>
+              <span>Fire Shows</span>
+              <span aria-hidden="true">•</span>
+              <span>Live Mixology</span>
+              <span aria-hidden="true">•</span>
+              <span>Corporate Soirees</span>
+              <span aria-hidden="true">•</span>
+              <span>Family Celebrations</span>
+              <span aria-hidden="true">•</span>
+              {/* duplicate for seamless loop */}
+              <span>Grand Openings</span>
+              <span aria-hidden="true">•</span>
+              <span>Anniversaries</span>
+              <span aria-hidden="true">•</span>
+              <span>Chef&apos;s Table</span>
+              <span aria-hidden="true">•</span>
+              <span>Fire Shows</span>
+              <span aria-hidden="true">•</span>
+              <span>Live Mixology</span>
+              <span aria-hidden="true">•</span>
+              <span>Corporate Soirees</span>
+              <span aria-hidden="true">•</span>
+              <span>Family Celebrations</span>
+              <span aria-hidden="true">•</span>
+            </div>
+          </div>
+        </section>
 
-          <section style={{ marginTop: '96px' }}>
-            <h3 style={{ margin: '0 0 32px', fontSize: '1.6rem', fontWeight: '300', color: 'var(--ivory)' }}>Upcoming Gallery</h3>
-            <GalleryGrid items={galleryUpcoming} />
-          </section>
+        <section className="gallery-section" data-testid="gallery-section-photos" id="restaurant-photos">
+          <div className="gallery-section-heading">
+            <div>
+              <span className="eyebrow">Restaurant Photos</span>
+              <h2>Interiors, plating and ambience.</h2>
+              <p style={{ maxWidth: '620px', marginTop: '10px' }}>
+                Warm woods, emerald tones and champagne gold — every corner of MAGNAURA is
+                designed for a private celebration.
+              </p>
+            </div>
+          </div>
+          <div className="photo-grid">
+            {restaurantPhotos.map((photo, i) => (
+              <PhotoTile key={photo.title} photo={photo} index={i} />
+            ))}
+          </div>
         </section>
       </main>
     </>
