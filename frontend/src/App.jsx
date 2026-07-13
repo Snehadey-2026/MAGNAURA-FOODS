@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { api } from './lib/api';
 import { usePublicData } from './hooks/usePublicData';
+import HeroSlider from './components/HeroSlider';
 
 const companyContact = {
   phone: '+91 79747 54130',
@@ -31,14 +32,6 @@ const companyContact = {
 const sectionMotion = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
-};
-
-export const isVideoUrl = (url) => typeof url === 'string' && /\.(mp4|webm|mov|ogg|m4v)(\?.*)?$/i.test(url);
-
-const getMediaType = (item) => {
-  if (item?.mediaType === 'video') return 'video';
-  if (item?.mediaType === 'image') return 'image';
-  return isVideoUrl(item?.mediaUrl) ? 'video' : 'image';
 };
 
 function LogoMark() {
@@ -158,177 +151,6 @@ function ReserveTableButton() {
         </span>
       </a>
     </div>
-  );
-}
-
-function Hero({ slides }) {
-  const safeSlides = slides && slides.length ? slides : [];
-  const [active, setActive] = useState(0);
-  const [prev, setPrev] = useState(null);
-  const total = safeSlides.length;
-
-  useEffect(() => {
-    if (total < 2) return undefined;
-    const timer = setInterval(() => {
-      setPrev(active);
-      setActive((value) => (value + 1) % total);
-    }, 6500);
-    return () => clearInterval(timer);
-  }, [total, active]);
-
-  useEffect(() => {
-    if (prev === null) return undefined;
-    const t = setTimeout(() => setPrev(null), 1500);
-    return () => clearTimeout(t);
-  }, [prev]);
-
-  if (!total) return <section className="hero" id="home" />;
-
-  const activeSlide = safeSlides[active] || {};
-  const prevSlide = prev !== null ? safeSlides[prev] : null;
-  const activeCtaHref = activeSlide.title === 'Taste The Legacy' ? '#franchise' : '#brands';
-  const goTo = (index) => {
-    if (index === active) return;
-    setPrev(active);
-    setActive(index);
-  };
-
-  const renderLayer = (slide, key, isActive, slideIndex) => {
-    if (!slide) return null;
-    const type = getMediaType(slide);
-    const isVideoSlide = slideIndex === 0;
-    return (
-      <div
-        className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${
-          isVideoSlide ? 'hero-layer-video' : 'hero-layer-image'
-        }`}
-        key={key}
-        aria-hidden="true"
-        data-testid={`hero-layer-${slideIndex}`}
-      >
-        {type === 'video' ? (
-          <video
-            src={slide.mediaUrl}
-            poster={slide.poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            disablePictureInPicture
-            ref={(el) => {
-              if (!el) return;
-              el.muted = true;
-              // Cinematic slow-motion feel for the chef flambé
-              el.playbackRate = 0.75;
-              const attempt = () => {
-                const p = el.play();
-                if (p && typeof p.catch === 'function') {
-                  p.catch(() => {
-                    const retry = () => {
-                      el.play().catch(() => {});
-                      document.removeEventListener('click', retry);
-                      document.removeEventListener('touchstart', retry);
-                      document.removeEventListener('scroll', retry);
-                    };
-                    document.addEventListener('click', retry, { once: true });
-                    document.addEventListener('touchstart', retry, { once: true });
-                    document.addEventListener('scroll', retry, { once: true });
-                  });
-                }
-              };
-              attempt();
-              el.addEventListener('loadeddata', attempt, { once: true });
-              el.addEventListener('canplay', attempt, { once: true });
-            }}
-          />
-        ) : (
-          <img src={slide.mediaUrl} alt="" loading={isActive ? 'eager' : 'lazy'} />
-        )}
-      </div>
-    );
-  };
-
-  const counter = String(active + 1).padStart(2, '0');
-  const totalStr = String(total).padStart(2, '0');
-
-  return (
-    <section className={`hero hero-legacy hero-slide-${active}`} id="home" data-testid="hero-section">
-      <div className="hero-stage">
-        {renderLayer(prevSlide, `prev-${prev}`, false, prev ?? 0)}
-        {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true, active)}
-      </div>
-      <div className="hero-overlay" aria-hidden="true" />
-      <div className="hero-vignette" aria-hidden="true" />
-      <div className="hero-grain" aria-hidden="true" />
-
-      <motion.div
-          className="hero-content"
-          key={`content-${active}`}
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        >
-          <span className="eyebrow">{activeSlide.eyebrow || 'Luxury Corporate Hospitality Group'}</span>
-          <motion.h1
-            key={`title-${active}`}
-            initial={{ opacity: 0, y: 26, letterSpacing: '0.02em' }}
-            animate={{ opacity: 1, y: 0, letterSpacing: '0em' }}
-            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-          >
-            {activeSlide.title}
-          </motion.h1>
-          <motion.p
-            key={`sub-${active}`}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
-          >
-            {activeSlide.subtitle}
-          </motion.p>
-      </motion.div>
-
-      <div className="hero-meta" aria-hidden="true">
-          <span className="hero-meta-counter">
-            <strong>{counter}</strong>
-            <span className="hero-meta-divider" />
-            <em>{totalStr}</em>
-          </span>
-          <span className="hero-meta-brand">MAGNAURA · FOODS</span>
-      </div>
-
-      <div className="hero-nav" role="tablist" aria-label="Hero slides">
-          {safeSlides.map((slide, index) => {
-            const cleanTitle = (slide.title || '').replace(/\n/g, ' ');
-            return (
-              <button
-                key={cleanTitle}
-                className={`hero-nav-item ${index === active ? 'active' : ''}`}
-                onClick={() => goTo(index)}
-                aria-label={`Show slide ${index + 1}: ${cleanTitle}`}
-                data-testid={`hero-indicator-${index}`}
-              >
-                {index === active ? (
-                  <a
-                    href={activeCtaHref}
-                    className="gold-button hero-nav-cta"
-                    onClick={(e) => e.stopPropagation()}
-                    data-testid="hero-cta"
-                  >
-                    {activeSlide.cta} <ArrowRight size={16} />
-                  </a>
-                ) : (
-                  <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
-                )}
-                <span className="hero-nav-track">
-                  <span className="hero-nav-fill" key={`${index}-${active}`} />
-                </span>
-                <span className="hero-nav-label">{cleanTitle}</span>
-              </button>
-            );
-          })}
-      </div>
-    </section>
   );
 }
 
@@ -804,7 +626,7 @@ export default function App() {
       <Navbar brands={brands} />
       <ReserveTableButton />
       <main>
-        <Hero slides={heroSlides} />
+        <HeroSlider slides={heroSlides} />
         <About />
         <Brands brands={brands} />
         <MenuShowcase items={menuItems} />
