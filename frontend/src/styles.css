@@ -257,6 +257,11 @@ video {
   z-index: 1;
 }
 
+.hero-layer-reference.is-active {
+  animation: none;
+  transform: none;
+}
+
 .hero-layer.is-leaving {
   opacity: 0;
   z-index: 0;
@@ -268,6 +273,16 @@ video {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.hero-layer-reference img {
+  object-position: center top;
+}
+
+.hero-reference-mode .nav-shell,
+.hero-reference-mode .reserve-table-shell {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Cinematic grade for the chef flambé video (Slide 1) */

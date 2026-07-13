@@ -187,11 +187,17 @@ function Hero({ slides }) {
   const activeSlide = safeSlides[active] || {};
   const prevSlide = prev !== null ? safeSlides[prev] : null;
   const activeCtaHref = activeSlide.title === 'Taste The Legacy' ? '#franchise' : '#brands';
+  const isReferenceSlide = Boolean(activeSlide.referenceImage);
   const goTo = (index) => {
     if (index === active) return;
     setPrev(active);
     setActive(index);
   };
+
+  useEffect(() => {
+    document.body.classList.toggle('hero-reference-mode', isReferenceSlide);
+    return () => document.body.classList.remove('hero-reference-mode');
+  }, [isReferenceSlide]);
 
   const renderLayer = (slide, key, isActive, slideIndex) => {
     if (!slide) return null;
@@ -201,7 +207,7 @@ function Hero({ slides }) {
       <div
         className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${
           isVideoSlide ? 'hero-layer-video' : 'hero-layer-image'
-        }`}
+        } ${slide.referenceImage ? 'hero-layer-reference' : ''}`}
         key={key}
         aria-hidden="true"
         data-testid={`hero-layer-${slideIndex}`}
@@ -258,76 +264,82 @@ function Hero({ slides }) {
         {renderLayer(prevSlide, `prev-${prev}`, false, prev ?? 0)}
         {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true, active)}
       </div>
-      <div className="hero-overlay" aria-hidden="true" />
-      <div className="hero-vignette" aria-hidden="true" />
-      <div className="hero-grain" aria-hidden="true" />
+      {!isReferenceSlide && <div className="hero-overlay" aria-hidden="true" />}
+      {!isReferenceSlide && <div className="hero-vignette" aria-hidden="true" />}
+      {!isReferenceSlide && <div className="hero-grain" aria-hidden="true" />}
 
-      <motion.div
-        className="hero-content"
-        key={`content-${active}`}
-        initial={{ opacity: 0, y: 22 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-      >
-        <span className="eyebrow">{activeSlide.eyebrow || 'Luxury Corporate Hospitality Group'}</span>
-        <motion.h1
-          key={`title-${active}`}
-          initial={{ opacity: 0, y: 26, letterSpacing: '0.02em' }}
-          animate={{ opacity: 1, y: 0, letterSpacing: '0em' }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-        >
-          {activeSlide.title}
-        </motion.h1>
-        <motion.p
-          key={`sub-${active}`}
-          initial={{ opacity: 0, y: 18 }}
+      {!isReferenceSlide && (
+        <motion.div
+          className="hero-content"
+          key={`content-${active}`}
+          initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
+          transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
         >
-          {activeSlide.subtitle}
-        </motion.p>
-      </motion.div>
+          <span className="eyebrow">{activeSlide.eyebrow || 'Luxury Corporate Hospitality Group'}</span>
+          <motion.h1
+            key={`title-${active}`}
+            initial={{ opacity: 0, y: 26, letterSpacing: '0.02em' }}
+            animate={{ opacity: 1, y: 0, letterSpacing: '0em' }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+          >
+            {activeSlide.title}
+          </motion.h1>
+          <motion.p
+            key={`sub-${active}`}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
+          >
+            {activeSlide.subtitle}
+          </motion.p>
+        </motion.div>
+      )}
 
-      <div className="hero-meta" aria-hidden="true">
-        <span className="hero-meta-counter">
-          <strong>{counter}</strong>
-          <span className="hero-meta-divider" />
-          <em>{totalStr}</em>
-        </span>
-        <span className="hero-meta-brand">MAGNAURA · FOODS</span>
-      </div>
+      {!isReferenceSlide && (
+        <div className="hero-meta" aria-hidden="true">
+          <span className="hero-meta-counter">
+            <strong>{counter}</strong>
+            <span className="hero-meta-divider" />
+            <em>{totalStr}</em>
+          </span>
+          <span className="hero-meta-brand">MAGNAURA · FOODS</span>
+        </div>
+      )}
 
-      <div className="hero-nav" role="tablist" aria-label="Hero slides">
-        {safeSlides.map((slide, index) => {
-          const cleanTitle = (slide.title || '').replace(/\n/g, ' ');
-          return (
-            <button
-              key={cleanTitle}
-              className={`hero-nav-item ${index === active ? 'active' : ''}`}
-              onClick={() => goTo(index)}
-              aria-label={`Show slide ${index + 1}: ${cleanTitle}`}
-              data-testid={`hero-indicator-${index}`}
-            >
-              {index === active ? (
-                <a
-                  href={activeCtaHref}
-                  className="gold-button hero-nav-cta"
-                  onClick={(e) => e.stopPropagation()}
-                  data-testid="hero-cta"
-                >
-                  {activeSlide.cta} <ArrowRight size={16} />
-                </a>
-              ) : (
-                <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
-              )}
-              <span className="hero-nav-track">
-                <span className="hero-nav-fill" key={`${index}-${active}`} />
-              </span>
-              <span className="hero-nav-label">{cleanTitle}</span>
-            </button>
-          );
-        })}
-      </div>
+      {!isReferenceSlide && (
+        <div className="hero-nav" role="tablist" aria-label="Hero slides">
+          {safeSlides.map((slide, index) => {
+            const cleanTitle = (slide.title || '').replace(/\n/g, ' ');
+            return (
+              <button
+                key={cleanTitle}
+                className={`hero-nav-item ${index === active ? 'active' : ''}`}
+                onClick={() => goTo(index)}
+                aria-label={`Show slide ${index + 1}: ${cleanTitle}`}
+                data-testid={`hero-indicator-${index}`}
+              >
+                {index === active ? (
+                  <a
+                    href={activeCtaHref}
+                    className="gold-button hero-nav-cta"
+                    onClick={(e) => e.stopPropagation()}
+                    data-testid="hero-cta"
+                  >
+                    {activeSlide.cta} <ArrowRight size={16} />
+                  </a>
+                ) : (
+                  <span className="hero-nav-index">{String(index + 1).padStart(2, '0')}</span>
+                )}
+                <span className="hero-nav-track">
+                  <span className="hero-nav-fill" key={`${index}-${active}`} />
+                </span>
+                <span className="hero-nav-label">{cleanTitle}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
