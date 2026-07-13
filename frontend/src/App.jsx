@@ -187,17 +187,11 @@ function Hero({ slides }) {
   const activeSlide = safeSlides[active] || {};
   const prevSlide = prev !== null ? safeSlides[prev] : null;
   const activeCtaHref = activeSlide.title === 'Taste The Legacy' ? '#franchise' : '#brands';
-  const isReferenceSlide = Boolean(activeSlide.referenceImage);
   const goTo = (index) => {
     if (index === active) return;
     setPrev(active);
     setActive(index);
   };
-
-  useEffect(() => {
-    document.body.classList.toggle('hero-reference-mode', isReferenceSlide);
-    return () => document.body.classList.remove('hero-reference-mode');
-  }, [isReferenceSlide]);
 
   const renderLayer = (slide, key, isActive, slideIndex) => {
     if (!slide) return null;
@@ -207,7 +201,7 @@ function Hero({ slides }) {
       <div
         className={`hero-layer ${isActive ? 'is-active' : 'is-leaving'} ${
           isVideoSlide ? 'hero-layer-video' : 'hero-layer-image'
-        } ${slide.referenceImage ? 'hero-layer-reference' : ''}`}
+        }`}
         key={key}
         aria-hidden="true"
         data-testid={`hero-layer-${slideIndex}`}
@@ -264,12 +258,11 @@ function Hero({ slides }) {
         {renderLayer(prevSlide, `prev-${prev}`, false, prev ?? 0)}
         {renderLayer(activeSlide, `active-${active}-${activeSlide.mediaUrl}`, true, active)}
       </div>
-      {!isReferenceSlide && <div className="hero-overlay" aria-hidden="true" />}
-      {!isReferenceSlide && <div className="hero-vignette" aria-hidden="true" />}
-      {!isReferenceSlide && <div className="hero-grain" aria-hidden="true" />}
+      <div className="hero-overlay" aria-hidden="true" />
+      <div className="hero-vignette" aria-hidden="true" />
+      <div className="hero-grain" aria-hidden="true" />
 
-      {!isReferenceSlide && (
-        <motion.div
+      <motion.div
           className="hero-content"
           key={`content-${active}`}
           initial={{ opacity: 0, y: 22 }}
@@ -293,22 +286,18 @@ function Hero({ slides }) {
           >
             {activeSlide.subtitle}
           </motion.p>
-        </motion.div>
-      )}
+      </motion.div>
 
-      {!isReferenceSlide && (
-        <div className="hero-meta" aria-hidden="true">
+      <div className="hero-meta" aria-hidden="true">
           <span className="hero-meta-counter">
             <strong>{counter}</strong>
             <span className="hero-meta-divider" />
             <em>{totalStr}</em>
           </span>
           <span className="hero-meta-brand">MAGNAURA · FOODS</span>
-        </div>
-      )}
+      </div>
 
-      {!isReferenceSlide && (
-        <div className="hero-nav" role="tablist" aria-label="Hero slides">
+      <div className="hero-nav" role="tablist" aria-label="Hero slides">
           {safeSlides.map((slide, index) => {
             const cleanTitle = (slide.title || '').replace(/\n/g, ' ');
             return (
@@ -338,8 +327,7 @@ function Hero({ slides }) {
               </button>
             );
           })}
-        </div>
-      )}
+      </div>
     </section>
   );
 }
