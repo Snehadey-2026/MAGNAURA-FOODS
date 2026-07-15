@@ -6,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminLogin from './pages/AdminLogin.jsx';
 import GalleryPage from './pages/GalleryPage.jsx';
 import './styles.css';
+import './components/HeroSlider.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

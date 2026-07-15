@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
-import MenuCard from './MenuCard';
-import SmokeLayer from './SmokeLayer';
 import './HeroSlider.css';
 
-function HeroSlide({ slide, layout, isActive }) {
+function HeroSlide({ slide, isActive }) {
   const type = slide.mediaType === 'video' ? 'video' : 'image';
   const mediaProps = {
     src: slide.mediaUrl,
@@ -13,33 +11,27 @@ function HeroSlide({ slide, layout, isActive }) {
 
   return (
     <motion.div
-      className="hero-slide"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      className={`hero-slide ${isActive ? 'is-active' : ''}`}
+      initial={false}
+      animate={{ opacity: isActive ? 1 : 0 }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       aria-hidden={!isActive}
     >
-      <div className="hero-backdrop" />
-      <div className="hero-gradient" />
-      <MenuCard layout={layout.card || {}} />
-      <div className="hero-foreground">
-        {type === 'video' ? (
-          <video
-            className="hero-foreground__media"
-            {...mediaProps}
-            poster={slide.poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-          />
-        ) : (
-          <img className="hero-foreground__media" {...mediaProps} />
-        )}
-      </div>
-      <SmokeLayer />
+      {type === 'video' ? (
+        <video
+          className="hero-slide-media"
+          {...mediaProps}
+          poster={slide.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+      ) : (
+        <img className="hero-slide-media" {...mediaProps} />
+      )}
+      <div className="hero-slide-shade" />
     </motion.div>
   );
 }
