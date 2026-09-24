@@ -1,6 +1,6 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
-async function request(path, options = {}) {
+  async function request(path, options = {}) {
   const headers = { ...(options.headers || {}) };
   if (!(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
   const token = localStorage.getItem('magnaura_token');

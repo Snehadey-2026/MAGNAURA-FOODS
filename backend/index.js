@@ -6,25 +6,25 @@ import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+
 
 dotenv.config();
 
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
-const SMTP_SECURE = process.env.SMTP_SECURE === 'true';
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-const COMPANY_EMAIL = process.env.COMPANY_EMAIL || process.env.ADMIN_EMAIL || 'admin@magnaurafoods.com';
-const SMTP_FROM = process.env.SMTP_FROM || COMPANY_EMAIL;
-const COMPANY_NAME = process.env.COMPANY_NAME || 'MAGNAURA FOODS';
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const BREVO_SENDER_EMAIL =
+  process.env.BREVO_SENDER_EMAIL || process.env.COMPANY_EMAIL;
 
-const mailTransporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: SMTP_PORT,
-  secure: SMTP_SECURE,
-  auth: SMTP_USER && SMTP_PASS ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
-});
+const BREVO_SENDER_NAME =
+  process.env.BREVO_SENDER_NAME || 'MAGNAURA FOODS';
+
+const COMPANY_EMAIL =
+  process.env.COMPANY_EMAIL ||
+  process.env.ADMIN_EMAIL ||
+  'admin@magnaurafoods.com';
+
+const COMPANY_NAME =
+  process.env.COMPANY_NAME ||
+  'MAGNAURA FOODS';
 
 function renderEmailTable(data) {
   return `<table style="width:100%;border-collapse:collapse;">${Object.entries(data)
@@ -44,10 +44,39 @@ function renderTextBody(data) {
 }
 
 async function sendEmail(mailOptions) {
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
-    throw new Error('SMTP is not configured for email delivery');
+  if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL) {
+    throw new Error('Brevo email service is not configured');
   }
-  return mailTransporter.sendMail({ from: SMTP_FROM, ...mailOptions });
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'api-key': BREVO_API_KEY,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: {
+        name: BREVO_SENDER_NAME,
+        email: BREVO_SENDER_EMAIL,
+      },
+      to: Array.isArray(mailOptions.to)
+        ? mailOptions.to.map((email) =>
+            typeof email === 'string' ? { email } : email
+          )
+        : [{ email: mailOptions.to }],
+      subject: mailOptions.subject,
+      htmlContent: mailOptions.html,
+      textContent: mailOptions.text,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Brevo email failed: ${errorText}`);
+  }
+
+  return response.json();
 }
 
 function renderFranchiseNotification(application) {
